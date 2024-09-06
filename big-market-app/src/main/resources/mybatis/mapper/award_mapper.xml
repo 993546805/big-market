@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tuto.infrastructure.persistent.dao.IAwardDao">
+    <resultMap id="CaseMap" type="com.tuto.infrastructure.persistent.po.Award">
+        <id column="id" property="id"/>
+        <result column="award_id" property="awardId"/>
+        <result column="award_key" property="awardKey"/>
+        <result column="award_config" property="awardConfig"/>
+        <result column="award_desc" property="awardDesc"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+    <insert id="insert">
+        INSERT INTO award(award_id,award_key,award_config,award_desc) VALUES(#{awardId},#{awardKey},#{awardConfig},#{awardDesc})
+    </insert>
+
+    <select id="queryAward" resultMap="CaseMap">
+        SELECT * FROM award
+        WHERE award_id = #{awardId}
+    </select>
+
+
+</mapper>
