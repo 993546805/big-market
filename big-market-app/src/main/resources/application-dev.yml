@@ -29,6 +29,9 @@ spring:
     connection-timeout: 30000 #数据库连接超时时间,默认30秒，即30000
     connection-test-query: SELECT 1
   type: com.zaxxer.hikari.HikariDataSource
+  redis:
+    host: 127.0.0.1
+    port: 16379
 
 mybatis:
   mapper-locations: classpath:/mybatis/mapper/*.xml
