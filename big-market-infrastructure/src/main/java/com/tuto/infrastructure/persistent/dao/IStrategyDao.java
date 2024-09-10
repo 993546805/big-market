@@ -1,6 +1,7 @@
 package com.tuto.infrastructure.persistent.dao;
 
 import com.tuto.infrastructure.persistent.po.Strategy;
+import com.tuto.infrastructure.persistent.po.StrategyRule;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -12,4 +13,5 @@ import org.apache.ibatis.annotations.Mapper;
 public interface IStrategyDao {
 
     Strategy queryStrategy(Long strategyId);
+
 }

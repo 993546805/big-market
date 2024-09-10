@@ -9,5 +9,5 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface IStrategyRuleDao {
 
-    StrategyRule queryStrategyRule(Long strategyId,Long awardId);
+    StrategyRule queryStrategyRule(StrategyRule req);
 }

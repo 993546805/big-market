@@ -1,6 +1,8 @@
 package com.tuto.domain.strategy.repository;
 
 import com.tuto.domain.strategy.model.entity.StrategyAwardEntity;
+import com.tuto.domain.strategy.model.entity.StrategyEntity;
+import com.tuto.domain.strategy.model.entity.StrategyRuleEntity;
 
 import java.util.List;
 import java.util.Map;
@@ -19,14 +21,20 @@ public interface IStrategyRepository {
     /**
      * 存储策略奖品搜索命中概率表
      */
-    void storeStrategyAwardSearchRateTable(Long strategyId, int rateRange, Map<Integer, Integer> shuffleStrategyAwardSearchRateTable);
+    void storeStrategyAwardSearchRateTable(String strategyId, int rateRange, Map<Integer, Integer> shuffleStrategyAwardSearchRateTable);
 
     /**
      * g
      * @param strategyId
      * @return
      */
-    Integer getRateRange(Long strategyId);
+    int getRateRange(Long strategyId);
 
-    Integer getStrategyAwardAssemble(Long strategyId, int rateKey);
+    int getRateRange(String key);
+
+    Integer getStrategyAwardAssemble(String strategyId, int rateKey);
+
+    StrategyEntity queryStrategyEntityByStrategyId(Long strategyId);
+
+    StrategyRuleEntity queryStrategyRule(Long strategyId, String ruleWeight);
 }
