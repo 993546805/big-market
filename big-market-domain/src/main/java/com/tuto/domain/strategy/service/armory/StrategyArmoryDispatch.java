@@ -1,4 +1,4 @@
-package com.tuto.domain.strategy.service;
+package com.tuto.domain.strategy.service.armory;
 
 import com.tuto.domain.strategy.model.entity.StrategyAwardEntity;
 import com.tuto.domain.strategy.model.entity.StrategyEntity;

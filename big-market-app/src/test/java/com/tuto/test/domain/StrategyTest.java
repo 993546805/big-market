@@ -1,7 +1,7 @@
 package com.tuto.test.domain;
 
-import com.tuto.domain.strategy.service.IStrategyArmory;
-import com.tuto.domain.strategy.service.IStrategyDispatch;
+import com.tuto.domain.strategy.service.armory.IStrategyArmory;
+import com.tuto.domain.strategy.service.armory.IStrategyDispatch;
 import com.tuto.infrastructure.persistent.redis.IRedisService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;

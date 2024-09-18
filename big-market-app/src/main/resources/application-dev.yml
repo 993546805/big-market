@@ -35,10 +35,10 @@ spring:
 
 mybatis:
   mapper-locations: classpath:/mybatis/mapper/*.xml
-  config-location:  classpath:/mybatis/config/mybatis-config.xml
+#  config-location:  classpath:/mybatis/config/mybatis-config.xml
 
 # 日志
 logging:
   level:
-    root: debug
+    com.tuto.infrastructure.persistent.dao: debug
   config: classpath:logback-spring.xml

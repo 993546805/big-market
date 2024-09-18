@@ -1,4 +1,4 @@
-package com.tuto.domain.strategy.service;
+package com.tuto.domain.strategy.service.armory;
 
 /**
  * 策略装配器,负责初始化策略计算
