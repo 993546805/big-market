@@ -1,4 +1,4 @@
-package com.tuto.domain.strategy.service.rule;
+package com.tuto.domain.strategy.service.rule.filter;
 
 import com.tuto.domain.strategy.model.entity.RuleActionEntity;
 import com.tuto.domain.strategy.model.entity.RuleMatterEntity;
