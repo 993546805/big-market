@@ -4,6 +4,8 @@ import com.tuto.domain.strategy.repository.IStrategyRepository;
 import com.tuto.domain.strategy.service.rule.chain.AbstractILogicChain;
 import com.tuto.types.common.Constants;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -17,7 +19,8 @@ import javax.annotation.Resource;
 
 @Slf4j
 @Component("rule_blacklist")
-public class BlackListLogicChain extends AbstractILogicChain {
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+public class BlackListLogicChain extends AbstractILogicChain implements Cloneable {
 
 
     @Resource

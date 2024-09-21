@@ -6,6 +6,8 @@ import com.tuto.domain.strategy.service.rule.chain.AbstractILogicChain;
 import com.tuto.types.common.Constants;
 import lombok.extern.slf4j.Slf4j;
 import org.checkerframework.checker.units.qual.A;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -20,7 +22,8 @@ import java.util.Map;
  */
 @Slf4j
 @Component("rule_weight")
-public class WeightLogicChain extends AbstractILogicChain {
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+public class WeightLogicChain extends AbstractILogicChain implements Cloneable{
 
     @Resource
     private IStrategyRepository strategyRepository;

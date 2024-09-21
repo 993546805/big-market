@@ -4,7 +4,8 @@ import com.tuto.domain.strategy.repository.IStrategyRepository;
 import com.tuto.domain.strategy.service.rule.chain.AbstractILogicChain;
 import com.tuto.types.common.Constants;
 import lombok.extern.slf4j.Slf4j;
-import org.checkerframework.checker.units.qual.A;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -15,7 +16,8 @@ import javax.annotation.Resource;
  */
 @Slf4j
 @Component("rule_whitelist")
-public class WhiteListLogicChain extends AbstractILogicChain {
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+public class WhiteListLogicChain extends AbstractILogicChain implements Cloneable{
 
     @Resource
     private IStrategyRepository strategyRepository;
@@ -39,7 +41,6 @@ public class WhiteListLogicChain extends AbstractILogicChain {
         log.info("抽奖责任链-白名单未命中 userId:{} strategyId:{} ruleModel:{}", userId, strategyId, ruleModel());
         return next().logic(userId, strategyId);
     }
-
 
 
     @Override
