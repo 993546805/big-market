@@ -17,6 +17,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import javax.annotation.Resource;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * @author tu
@@ -38,67 +39,27 @@ public class RaffleStrategyTest {
 
     @Before
     public void setUp() {
-        ReflectionTestUtils.setField(weightLogicChain,"userScore",40500L);
-        log.info("测试结果：{}", strategyArmory.assembleLotteryStrategy(100001L));
-        log.info("测试结果：{}", strategyArmory.assembleLotteryStrategy(100002L));
-        log.info("测试结果：{}", strategyArmory.assembleLotteryStrategy(100003L));
-        ReflectionTestUtils.setField(ruleLockLogicFilter, "userRaffleCount", 7L);
+//        ReflectionTestUtils.setField(weightLogicChain,"userScore",40500L);
+//        log.info("测试结果：{}", strategyArmory.assembleLotteryStrategy(100001L));
+        log.info("测试结果：{}", strategyArmory.assembleLotteryStrategy(100006L));
+//        ReflectionTestUtils.setField(ruleLockLogicFilter, "userRaffleCount", 7L);
     }
 
 
-    /**
-     * 用于测试:权重抽奖
-     */
     @Test
-    public void test_performRaffle() {
-        RaffleFactorEntity raffleFactorEntity = RaffleFactorEntity.builder()
-                .userId("tuhb1")
-                .strategyId(100001L)
-                .build();
-        RaffleAwardEntity raffleAwardEntity = raffleStrategy.performRaffle(raffleFactorEntity);
-        log.info("请求参数: {}", JSON.toJSONString(raffleFactorEntity));
-        log.info("返回结果: {}", JSON.toJSONString(raffleAwardEntity));
+    public void test_performRaffle() throws InterruptedException {
+        for (int i = 0; i < 1; i++) {
+            RaffleFactorEntity raffleFactorEntity = RaffleFactorEntity.builder()
+                    .userId("xiaofuge")
+                    .strategyId(100006L)
+                    .build();
+            RaffleAwardEntity raffleAwardEntity = raffleStrategy.performRaffle(raffleFactorEntity);
+            log.info("请求参数：{}", JSON.toJSONString(raffleFactorEntity));
+            log.info("测试结果：{}", JSON.toJSONString(raffleAwardEntity));
+        }
+        // 等待 UpdateAwardStockJob 消费队列
+        new CountDownLatch(1).await();
     }
 
-    /**
-     * 用于测试:黑名单抽奖
-     */
-    @Test
-    public void test_preformRaffle_blacklist() {
-        RaffleFactorEntity raffleFactorEntity = RaffleFactorEntity.builder()
-                .userId("user003")
-                .strategyId(100001L)
-                .build();
-        RaffleAwardEntity raffleAwardEntity = raffleStrategy.performRaffle(raffleFactorEntity);
-        log.info("请求参数: {}", JSON.toJSONString(raffleFactorEntity));
-        log.info("返回结果: {}", JSON.toJSONString(raffleAwardEntity));
-    }
 
-    /**
-     * 用于测试:白名单抽奖
-     */
-    @Test
-    public void test_preformRaffle_whitelist() {
-        RaffleFactorEntity raffleFactorEntity = RaffleFactorEntity.builder()
-                .userId("tuhb")
-                .strategyId(100001L)
-                .build();
-        RaffleAwardEntity raffleAwardEntity = raffleStrategy.performRaffle(raffleFactorEntity);
-        log.info("请求参数: {}", JSON.toJSONString(raffleFactorEntity));
-        log.info("返回结果: {}", JSON.toJSONString(raffleAwardEntity));
-    }
-
-    /**
-     * 用于测试: 测试抽奖中
-     */
-    @Test
-    public void test_raffle_center() {
-        RaffleFactorEntity raffleFactorEntity = RaffleFactorEntity.builder()
-                .userId("tuhb")
-                .strategyId(100003L)
-                .build();
-        RaffleAwardEntity raffleAwardEntity = raffleStrategy.performRaffle(raffleFactorEntity);
-        log.info("请求参数: {}", JSON.toJSONString(raffleFactorEntity));
-        log.info("返回结果: {}", JSON.toJSONString(raffleAwardEntity));
-    }
 }

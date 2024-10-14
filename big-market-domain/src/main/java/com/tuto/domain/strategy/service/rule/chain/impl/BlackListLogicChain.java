@@ -2,6 +2,7 @@ package com.tuto.domain.strategy.service.rule.chain.impl;
 
 import com.tuto.domain.strategy.repository.IStrategyRepository;
 import com.tuto.domain.strategy.service.rule.chain.AbstractILogicChain;
+import com.tuto.domain.strategy.service.rule.chain.factory.DefaultChainFactory;
 import com.tuto.types.common.Constants;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -27,7 +28,7 @@ public class BlackListLogicChain extends AbstractILogicChain implements Cloneabl
     private IStrategyRepository strategyRepository;
 
     @Override
-    public Integer logic(String userId, Long strategyId) {
+    public DefaultChainFactory.StrategyAwardVO logic(String userId, Long strategyId) {
         log.info("抽奖责任链-黑名单开始 userId:{} strategyId:{} ruleModel:{}", userId, strategyId, ruleModel());
 
         // 查询规则配置
@@ -40,7 +41,10 @@ public class BlackListLogicChain extends AbstractILogicChain implements Cloneabl
         for (String userBlackId : userBlackIds) {
             if (userId.equals(userBlackId)) {
                 log.info("抽奖责任链-黑名单命中 userId:{} strategyId:{} ruleModel:{} awardId:{}", userId, strategyId, ruleModel(), awardId);
-                return awardId;
+                return DefaultChainFactory.StrategyAwardVO.builder()
+                        .awardId(awardId)
+                        .logicModel(ruleModel())
+                        .build();
             }
         }
         log.info("抽奖责任链-黑名单未命中 userId:{} strategyId:{} ruleModel:{} awardId:{}", userId, strategyId, ruleModel(), awardId);

@@ -3,6 +3,7 @@ package com.tuto.domain.strategy.service.rule.chain.factory;
 import com.tuto.domain.strategy.model.entity.StrategyEntity;
 import com.tuto.domain.strategy.repository.IStrategyRepository;
 import com.tuto.domain.strategy.service.rule.chain.ILogicChain;
+import lombok.*;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -42,5 +43,28 @@ public class DefaultChainFactory {
         currentChain.appendNext(logicChainGroup.get("default"));
 
         return rootChain;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    public enum LogicModel {
+        RULE_BLACKLIST("rule_blacklist", "黑名单规则过滤,命中黑名单则直接返回"),
+        RULE_WEIGHT("rule_weight", "根据抽奖权重返回可抽奖范围"),
+        RULE_LOCK("rule_lock", "抽奖n次后，对应奖品可解锁抽奖"),
+        RULE_LUCK_AWARD("rule_luck_award", "抽奖n次后，对应奖品可解锁抽奖"),
+        DEFAULT("default", "默认责任链");
+
+        private final String code;
+        private final String info;
+
+    }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class StrategyAwardVO {
+        private Integer awardId;
+        private String logicModel;
     }
 }

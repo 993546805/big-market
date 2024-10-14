@@ -18,7 +18,7 @@ import java.util.List;
 @Builder
 public class RuleTreeNodeVO {
     /** 规则树 ID **/
-    private Integer treeId;
+    private String treeId;
     /** 规则 key **/
     private String ruleKey;
     /** 规则描述 **/

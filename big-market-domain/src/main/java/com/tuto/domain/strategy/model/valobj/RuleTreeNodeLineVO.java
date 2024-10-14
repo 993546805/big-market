@@ -16,7 +16,7 @@ import org.checkerframework.checker.units.qual.A;
 @Builder
 public class RuleTreeNodeLineVO {
     /** 规则树 ID **/
-    private Integer treeId;
+    private String treeId;
     /** 规则 Key节点  From**/
     private String ruleNodeFrom;
     /** 规则 Key节点 to **/
