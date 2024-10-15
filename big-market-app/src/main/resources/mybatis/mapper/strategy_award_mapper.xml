@@ -29,6 +29,11 @@
         set award_count_surplus = award_count_surplus - 1
         where strategy_id = #{strategyId} and award_id = #{awardId} and award_count_surplus > 0
     </update>
+    <select id="queryStrategyAward" resultMap="CaseMap">
+        SELECT *
+        FROM strategy_award
+        WHERE strategy_id = #{strategyId} and award_id = #{awardId}
+    </select>
 
 
 

@@ -21,6 +21,8 @@ public interface IStrategyRepository {
      */
     List<StrategyAwardEntity> queryStrategyAwardList(Long strategyId);
 
+    StrategyAwardEntity queryStrategyAward(Long strategyId, Integer awardId);
+
     /**
      * 存储策略奖品搜索命中概率表
      */
@@ -58,4 +60,6 @@ public interface IStrategyRepository {
     StrategyAwardStockKeyVO takeQueueValue();
 
     void updateStrategyAwardStock(Long strategyId, Integer awardId);
+
+
 }

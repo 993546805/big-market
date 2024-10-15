@@ -66,5 +66,6 @@ public class DefaultChainFactory {
     public static class StrategyAwardVO {
         private Integer awardId;
         private String logicModel;
+
     }
 }

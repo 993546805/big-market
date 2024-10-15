@@ -3,12 +3,15 @@ package com.tuto.domain.strategy.service.raffle;
 import com.tuto.domain.strategy.model.entity.RaffleFactorEntity;
 import com.tuto.domain.strategy.model.entity.RuleActionEntity;
 import com.tuto.domain.strategy.model.entity.RuleMatterEntity;
+import com.tuto.domain.strategy.model.entity.StrategyAwardEntity;
 import com.tuto.domain.strategy.model.valobj.RuleLogicCheckTypeVO;
 import com.tuto.domain.strategy.model.valobj.RuleTreeVO;
 import com.tuto.domain.strategy.model.valobj.StrategyAwardRuleModelVO;
 import com.tuto.domain.strategy.model.valobj.StrategyAwardStockKeyVO;
 import com.tuto.domain.strategy.repository.IStrategyRepository;
 import com.tuto.domain.strategy.service.AbstractRaffleStrategy;
+import com.tuto.domain.strategy.service.IRaffleAward;
+import com.tuto.domain.strategy.service.IRaffleStock;
 import com.tuto.domain.strategy.service.armory.IStrategyDispatch;
 import com.tuto.domain.strategy.service.rule.chain.ILogicChain;
 import com.tuto.domain.strategy.service.rule.chain.factory.DefaultChainFactory;
@@ -22,6 +25,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -32,7 +36,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Service
-public class DefaultRaffleStrategy extends AbstractRaffleStrategy {
+public class DefaultRaffleStrategy extends AbstractRaffleStrategy implements IRaffleStock, IRaffleAward {
 
     @Resource
     private DefaultLogicFactory logicFactory;
@@ -70,5 +74,10 @@ public class DefaultRaffleStrategy extends AbstractRaffleStrategy {
     @Override
     public void updateStrategyAwardStock(Long strategyId, Integer awardId) {
         repository.updateStrategyAwardStock(strategyId, awardId);
+    }
+
+    @Override
+    public List<StrategyAwardEntity> queryRaffleStrategyAwardList(Long strategyId) {
+        return repository.queryStrategyAwardList(strategyId);
     }
 }
