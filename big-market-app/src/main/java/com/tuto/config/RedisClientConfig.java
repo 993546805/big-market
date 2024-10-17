@@ -26,7 +26,7 @@ import java.io.IOException;
  * @author tu
  * @date 2024-09-06 16:47
  */
-@Configurable
+@Configuration
 @EnableConfigurationProperties(RedisClientConfigProperties.class)
 public class RedisClientConfig {
     @Bean("redissonClient")
