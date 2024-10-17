@@ -28,6 +28,8 @@ public class RaffleActivityOrder {
     private Date orderTime;
     /** 状态;not_used,used,expire */
     private String state;
+    /** 业务防重 ID */
+    private String outBusinessNo;
     /** 创建时间 */
     private Date createTime;
     /** 更新时间 */

@@ -1,8 +1,7 @@
 package com.tuto.test.domain;
 
 import com.alibaba.fastjson.JSON;
-import com.tuto.domain.activity.model.entity.ActivityOrderEntity;
-import com.tuto.domain.activity.model.entity.ActivityShopCartEntity;
+import com.tuto.domain.activity.model.entity.SkuRechargeEntity;
 import com.tuto.domain.activity.service.IRaffleOrder;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
@@ -30,11 +29,12 @@ public class RaffleActivityTest {
      */
     @Test
     public void test() {
-        ActivityShopCartEntity activityShopCartEntity = ActivityShopCartEntity.builder()
+        SkuRechargeEntity activityShopCartEntity = SkuRechargeEntity.builder()
                 .sku(9011L)
                 .userId("tuhb")
+                .outBusinessNo("sdlkfjo0011")
                 .build();
-        ActivityOrderEntity raffleActivityOrder = raffleOrder.createRaffleActivityOrder(activityShopCartEntity);
-        log.info("测试结果：{}", JSON.toJSONString(raffleActivityOrder));
+        String orderId = raffleOrder.createRaffleActivityOrder(activityShopCartEntity);
+        log.info("测试结果：{}", JSON.toJSONString(orderId));
     }
 }

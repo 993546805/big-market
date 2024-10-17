@@ -7,16 +7,14 @@ import lombok.NoArgsConstructor;
 
 /**
  * @author tu
- * @date 2024-10-17 11:11
+ * @date 2024-10-17 15:17
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ActivityShopCartEntity {
-
-    /** 用户ID */
+public class SkuRechargeEntity {
     private String userId;
-    /** 商品SKU - activity + activity count */
     private Long sku;
+    private String outBusinessNo;
 }

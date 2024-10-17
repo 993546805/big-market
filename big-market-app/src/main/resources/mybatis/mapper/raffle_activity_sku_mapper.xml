@@ -17,5 +17,10 @@
         where sku = #{sku}
     </select>
 
+    <update id="subtractionActivitySkuStock">
+        update raffle_activity_sku
+        set stock_count_surplus = stock_count_surplus - 1
+        where sku = #{sku} and stock_count_surplus >= 1 and stock_count_surplus = #{stockCountSurplus}
+    </update>
 
 </mapper>
