@@ -1,46 +1,42 @@
-package com.tuto.infrastructure.persistent.po;
+package com.tuto.domain.activity.model.entity;
 
+import com.tuto.domain.activity.model.valobj.ActivityStateVO;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
 /**
- * 抽奖活动
  * @author tu
- * @date 2024-10-15 10:55
+ * @date 2024-10-17 11:17
  */
 @Data
-public class RaffleActivity {
-    /**
-     * 自增ID
-     */
-    private Long id;
-
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class ActivityEntity {
     /**
      * 活动ID
      */
     private Long activityId;
-
     /**
      * 活动名称
      */
     private String activityName;
-
     /**
      * 活动描述
      */
     private String activityDesc;
-
     /**
      * 开始时间
      */
     private Date beginDateTime;
-
     /**
      * 结束时间
      */
     private Date endDateTime;
-
     /**
      * 抽奖策略ID
      */
@@ -49,15 +45,5 @@ public class RaffleActivity {
     /**
      * 活动状态
      */
-    private String state;
-
-    /**
-     * 创建时间
-     */
-    private Date createTime;
-
-    /**
-     * 更新时间
-     */
-    private Date updateTime;
+    private ActivityStateVO state;
 }
