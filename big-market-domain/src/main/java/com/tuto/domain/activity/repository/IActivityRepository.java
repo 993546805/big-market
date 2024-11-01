@@ -4,6 +4,9 @@ import com.tuto.domain.activity.model.aggregate.CreateOrderAggregate;
 import com.tuto.domain.activity.model.entity.ActivityCountEntity;
 import com.tuto.domain.activity.model.entity.ActivityEntity;
 import com.tuto.domain.activity.model.entity.ActivitySkuEntity;
+import com.tuto.domain.activity.model.valobj.ActivitySkuStockKeyVO;
+
+import java.util.Date;
 
 public interface IActivityRepository {
 
@@ -15,5 +18,17 @@ public interface IActivityRepository {
 
     void doSaveOrder(CreateOrderAggregate createOrderAggregate);
 
-    int subtractionActivitySkuStock(Long sku, Integer stockCountSurplus);
+    boolean subtractionActivitySkuStock(Long sku, String cacheKey, Date endDateTime);
+
+    void cacheActivitySkuStockCount(String cacheKey, Integer stockCount);
+
+    void activitySkuStockConsumeSendQueue(ActivitySkuStockKeyVO activitySkuStockKeyVO);
+
+    ActivitySkuStockKeyVO takeQueueValue();
+
+    void clearQueueValue();
+
+    void updateActivitySkuStock(Long sku);
+
+    void clearActivitySkuStock(Long sku);
 }

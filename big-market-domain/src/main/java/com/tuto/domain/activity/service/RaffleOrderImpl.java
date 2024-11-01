@@ -2,6 +2,7 @@ package com.tuto.domain.activity.service;
 
 import com.tuto.domain.activity.model.aggregate.CreateOrderAggregate;
 import com.tuto.domain.activity.model.entity.*;
+import com.tuto.domain.activity.model.valobj.ActivitySkuStockKeyVO;
 import com.tuto.domain.activity.model.valobj.OrderStateVO;
 import com.tuto.domain.activity.repository.IActivityRepository;
 import com.tuto.domain.activity.service.rule.factory.DefaultActivityChainFactory;
@@ -17,7 +18,7 @@ import java.util.Date;
  * @date 2024-10-17 11:20
  */
 @Service
-public class RaffleOrderImpl extends AbstractRaffleOrder {
+public class RaffleOrderImpl extends AbstractRaffleOrder implements ISkuStock{
 
     public RaffleOrderImpl(IActivityRepository activityRepository, DefaultActivityChainFactory defaultActivityChainFactory) {
         super(activityRepository, defaultActivityChainFactory);
@@ -55,5 +56,25 @@ public class RaffleOrderImpl extends AbstractRaffleOrder {
                 .monthCount(activityCountEntity.getMonthCount())
                 .activityOrderEntity(activityOrderEntity)
                 .build();
+    }
+
+    @Override
+    public ActivitySkuStockKeyVO takeQueueValue() throws InterruptedException {
+        return activityRepository.takeQueueValue();
+    }
+
+    @Override
+    public void clearQueueValue() {
+        activityRepository.clearQueueValue();
+    }
+
+    @Override
+    public void updateActivitySkuStock(Long sku) {
+        activityRepository.updateActivitySkuStock(sku);
+    }
+
+    @Override
+    public void clearActivitySkuStock(Long sku) {
+        activityRepository.clearActivitySkuStock(sku);
     }
 }

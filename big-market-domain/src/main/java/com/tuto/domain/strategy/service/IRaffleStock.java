@@ -27,4 +27,15 @@ public interface IRaffleStock {
      * @param awardId    奖品ID
      */
     void updateStrategyAwardStock(Long strategyId, Integer awardId);
+
+    /**
+     * 清空队列
+     */
+    void clearQueueValue();
+
+    /**
+     * 缓存库存已消耗完毕,清空数据库库存
+     */
+    void clearStrategyAwardStock(Long strategyId, Integer awardId);
+
 }

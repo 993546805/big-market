@@ -35,6 +35,12 @@
         WHERE strategy_id = #{strategyId} and award_id = #{awardId}
     </select>
 
+    <update id="clearStrategyAwardStock">
+        update strategy_award
+        set award_count_surplus = 0,update_time = now()
+        where strategy_id = #{strategyId} and award_id = #{awardId}
+    </update>
+
 
 
 </mapper>

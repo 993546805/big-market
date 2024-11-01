@@ -12,4 +12,8 @@ public interface IRaffleActivitySkuDao {
     RaffleActivitySku queryActivitySku(Long sku);
 
     int subtractionActivitySkuStock(Long sku, Integer stockCountSurplus);
+
+    void updateActivitySkuStock(Long sku);
+
+    void clearActivitySkuStock(Long sku);
 }

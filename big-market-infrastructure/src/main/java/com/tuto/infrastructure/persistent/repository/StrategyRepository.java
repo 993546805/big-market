@@ -1,10 +1,12 @@
 package com.tuto.infrastructure.persistent.repository;
 
+import com.tuto.domain.activity.event.AwardStockZeroMessageEvent;
 import com.tuto.domain.strategy.model.entity.StrategyAwardEntity;
 import com.tuto.domain.strategy.model.entity.StrategyEntity;
 import com.tuto.domain.strategy.model.entity.StrategyRuleEntity;
 import com.tuto.domain.strategy.model.valobj.*;
 import com.tuto.domain.strategy.repository.IStrategyRepository;
+import com.tuto.infrastructure.event.EventPublisher;
 import com.tuto.infrastructure.persistent.dao.*;
 import com.tuto.infrastructure.persistent.po.*;
 import com.tuto.infrastructure.persistent.redis.IRedisService;
@@ -44,6 +46,10 @@ public class StrategyRepository implements IStrategyRepository {
     private IRuleTreeNodeDao ruleTreeNodeDao;
     @Resource
     private IRuleTreeNodeLineDao ruleTreeNodeLineDao;
+    @Resource
+    private EventPublisher eventPublisher;
+    @Resource
+    private AwardStockZeroMessageEvent awardStockZeroMessageEvent;
 
     @Override
     public List<StrategyAwardEntity> queryStrategyAwardList(Long strategyId) {
@@ -261,9 +267,19 @@ public class StrategyRepository implements IStrategyRepository {
     }
 
     @Override
-    public Boolean subtractionAwardStock(String cacheKey) {
+    public Boolean subtractionAwardStock(Long strategyId, Integer awardId) {
+        String cacheKey = Constants.RedisKey.STRATEGY_AWARD_COUNT_KEY + strategyId + Constants.UNDERLINE + awardId;
+        return subtractionAwardStock(cacheKey,strategyId,awardId);
+    }
+
+
+
+    public Boolean subtractionAwardStock(String cacheKey,Long strategyId, Integer awardId) {
         long surplus = redisService.decr(cacheKey);
-        if(surplus < 0){
+        if(surplus == 0) {
+            // 库存消耗没了以后，发送MQ消息，更新数据库库存
+            eventPublisher.publish(awardStockZeroMessageEvent.getTopic(), awardStockZeroMessageEvent.buildEventMessage(AwardStockZeroMessageEvent.AwardStockZeroVo.builder().strategyId(strategyId).awardId(awardId).build()));
+        }else if(surplus < 0){
             // 重置库存为0
             redisService.setValue(cacheKey, 0);
             return false;
@@ -292,10 +308,26 @@ public class StrategyRepository implements IStrategyRepository {
     }
 
     @Override
+    public void clearQueueValue() {
+        String cacheKey = Constants.RedisKey.STRATEGY_AWARD_COUNT_QUERY_KEY;
+        RBlockingQueue<StrategyAwardStockKeyVO> destinationQueue = redisService.getBlockingQueue(cacheKey);
+        RDelayedQueue<StrategyAwardStockKeyVO> delayedQueue = redisService.getDelayedQueue(destinationQueue);
+        delayedQueue.clear();
+        destinationQueue.clear();
+    }
+
+    @Override
+    public void clearStrategyAwardStock(Long strategyId, Integer awardId) {
+        strategyAwardDao.clearStrategyAwardStock(strategyId, awardId);
+    }
+
+    @Override
     public void updateStrategyAwardStock(Long strategyId, Integer awardId) {
         StrategyAward strategyAward = new StrategyAward();
         strategyAward.setStrategyId(strategyId);
         strategyAward.setAwardId(awardId);
         strategyAwardDao.updateStrategyAwardStock(strategyAward);
     }
+
+
 }
