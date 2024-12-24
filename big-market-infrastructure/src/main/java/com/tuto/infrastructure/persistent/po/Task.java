@@ -12,8 +12,11 @@ import java.util.Date;
 public class Task {
     /** 自增 ID */
     private Long id;
+    /** 用户 ID */
+    private String userId;
     /** 消息主题 */
     private String topic;
+    private String messageId;
     /** 消息内容 */
     private String message;
     /** 任务状态 create-创建 completed-完成 fail-失败 */

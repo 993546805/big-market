@@ -13,7 +13,7 @@ public class UserAwardRecord {
     /** 自增 ID */
     private Long id;
     /** 用户 ID */
-    private Long userId;
+    private String userId;
     /** 活动 ID */
     private Long activityId;
     /** 策略 ID */
@@ -21,13 +21,13 @@ public class UserAwardRecord {
     /** 抽奖订单ID*/
     private String orderId;
     /** 奖品 ID */
-    private Long awardId;
+    private Integer awardId;
     /** 奖品标题 */
     private String awardTitle;
     /** 中奖时间 */
-    private Long awardTime;
+    private Date awardTime;
     /** 状态： create 创建 completed 完成 */
-    private Integer status;
+    private Integer awardState;
     /** 创建时间 */
     private Date createTime;
     /** 更新时间 */
