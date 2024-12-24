@@ -76,21 +76,31 @@ public class RedisClientConfig {
 
                 // 将字节数组转换为字符串
                 String jsonStr = new String(bytes, StandardCharsets.UTF_8);
-                JSONObject jsonObject = JSON.parseObject(jsonStr);
 
-                // 获取 @type 字段
-                String typeName = jsonObject.getString("@type");
-                if (typeName != null) {
-                    Class<?> clazz = Class.forName(typeName);
-                    return JSON.parseObject(jsonStr, clazz);
+                // 判断是否是 JSON 格式
+                if (jsonStr.startsWith("{") && jsonStr.endsWith("}")) {
+                    JSONObject jsonObject = JSON.parseObject(jsonStr);
+
+                    // 获取 @type 字段
+                    String typeName = jsonObject.getString("@type");
+                    if (typeName != null) {
+                        Class<?> clazz = Class.forName(typeName);
+                        return JSON.parseObject(jsonStr, clazz);
+                    } else {
+                        // 如果没有 @type 字段，默认解析为 JSONObject
+                        return JSON.parseObject(jsonStr);
+                    }
                 } else {
-                    // 如果没有 @type 字段，默认解析为 JSONObject
-                    return JSON.parseObject(jsonStr);
+                    // 对非 JSON 数据的简单处理，例如 Integer 或 String
+                    return JSON.parse(jsonStr);
                 }
             } catch (ClassNotFoundException e) {
                 throw new RuntimeException("Class not found: " + e.getMessage(), e);
+            } catch (Exception e) {
+                throw new RuntimeException("Decode error: " + e.getMessage(), e);
             }
         };
+
 
         @Override
         public Decoder<Object> getValueDecoder() {

@@ -24,7 +24,10 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -247,13 +250,12 @@ public class ActivityRepository implements IActivityRepository {
         UserRaffleOrder userRaffleOrder = new UserRaffleOrder();
         userRaffleOrder.setUserId(userId);
         userRaffleOrder.setActivityId(activityId);
-        userRaffleOrder.setOrderState(UserRaffleOrderStateVO.USED.getCode());
         UserRaffleOrder userRaffleOrderRes = userRaffleOrderDao.queryNoUsedRaffleOrder(userRaffleOrder);
         if (userRaffleOrderRes == null) {
             return null;
         }
         return UserRaffleOrderEntity.builder()
-                .orderState(UserRaffleOrderStateVO.valueOf(userRaffleOrderRes.getOrderState()))
+                .orderState(UserRaffleOrderStateVO.of(userRaffleOrderRes.getOrderState()))
                 .userId(userRaffleOrderRes.getUserId())
                 .orderId(userRaffleOrderRes.getOrderId())
                 .orderTime(userRaffleOrderRes.getOrderTime())
@@ -427,5 +429,20 @@ public class ActivityRepository implements IActivityRepository {
                 .day(raffleActivityAccountDayRes.getDay())
                 .dayCountSurplus(raffleActivityAccountDayRes.getDayCountSurplus())
                 .build();
+    }
+
+    @Override
+    public List<ActivitySkuEntity> queryActivitySkuListByActivityId(Long activityId) {
+        List<RaffleActivitySku> raffleActivitySkus = raffleActivitySkuDao.queryActivitySkuListByActivityId(activityId);
+        List<ActivitySkuEntity> activitySkuEntities = new ArrayList<>(raffleActivitySkus.size());
+        for (RaffleActivitySku raffleActivitySku:raffleActivitySkus){
+            ActivitySkuEntity activitySkuEntity = new ActivitySkuEntity();
+            activitySkuEntity.setSku(raffleActivitySku.getSku());
+            activitySkuEntity.setActivityCountId(raffleActivitySku.getActivityCountId());
+            activitySkuEntity.setStockCount(raffleActivitySku.getStockCount());
+            activitySkuEntity.setStockCountSurplus(raffleActivitySku.getStockCountSurplus());
+            activitySkuEntities.add(activitySkuEntity);
+        }
+        return activitySkuEntities;
     }
 }

@@ -66,4 +66,6 @@ public interface IStrategyRepository {
     void clearQueueValue();
 
     void clearStrategyAwardStock(Long strategyId, Integer awardId);
+
+    Long queryStrategyIdByActivity(Long activityId);
 }

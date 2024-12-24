@@ -33,6 +33,8 @@ import java.util.concurrent.TimeUnit;
 public class StrategyRepository implements IStrategyRepository {
 
     @Resource
+    private IRaffleActivityDao activityDao;
+    @Resource
     private IStrategyAwardDao strategyAwardDao;
     @Resource
     private IStrategyRuleDao strategyRuleDao;
@@ -319,6 +321,11 @@ public class StrategyRepository implements IStrategyRepository {
     @Override
     public void clearStrategyAwardStock(Long strategyId, Integer awardId) {
         strategyAwardDao.clearStrategyAwardStock(strategyId, awardId);
+    }
+
+    @Override
+    public Long queryStrategyIdByActivity(Long activityId) {
+        return activityDao.queryStrategyIdByActivityId(activityId);
     }
 
     @Override

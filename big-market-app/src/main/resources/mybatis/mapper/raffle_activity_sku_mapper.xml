@@ -22,8 +22,8 @@
         set stock_count_surplus = stock_count_surplus - 1
         where sku = #{sku} and stock_count_surplus >= 1 and stock_count_surplus = #{stockCountSurplus}
     </update>
-
     <update id="updateActivitySkuStock">
+
         update raffle_activity_sku
         set stock_count_surplus = stock_count_surplus - 1,update_time = now()
         where sku = #{sku} and stock_count_surplus > 0
@@ -35,4 +35,9 @@
         where sku = #{sku}
     </update>
 
+    <select id="queryActivitySkuListByActivityId" resultMap="CaseMap">
+        select  sku, activity_id, activity_count_id, stock_count, stock_count_surplus
+        from raffle_activity_sku
+        where activity_id = #{activityId}
+    </select>
 </mapper>

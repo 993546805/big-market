@@ -15,8 +15,8 @@
         <result column="update_time" property="updateTime"/>
     </resultMap>
 
-    <select id="queryNoUsedRaffleOrder" resultType="com.tuto.infrastructure.persistent.po.UserRaffleOrder">
-    select * from user_raffle_order where user_id = #{userId} and activity_id = #{activityId} and order_state = #{orderState}
+    <select id="queryNoUsedRaffleOrder" resultMap="dataMap">
+    select * from user_raffle_order where user_id = #{userId} and activity_id = #{activityId} and order_state = 'create'
     </select>
 
     <insert id="insert" parameterType="com.tuto.infrastructure.persistent.po.UserRaffleOrder">
@@ -28,4 +28,8 @@
         )
     </insert>
 
+    <update id="updateUserRaffleOrderStateUsed">
+        update user_raffle_order set order_state = 'used', update_time = now()
+        where user_id = #{userId} and order_id = #{orderId}
+    </update>
 </mapper>

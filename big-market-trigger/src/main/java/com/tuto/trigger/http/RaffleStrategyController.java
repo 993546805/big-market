@@ -7,7 +7,7 @@ import com.tuto.domain.strategy.model.entity.StrategyAwardEntity;
 import com.tuto.domain.strategy.service.IRaffleAward;
 import com.tuto.domain.strategy.service.IRaffleStrategy;
 import com.tuto.domain.strategy.service.armory.IStrategyArmory;
-import com.tuto.trigger.api.IRaffleService;
+import com.tuto.trigger.api.IRaffleStrategyService;
 import com.tuto.trigger.api.dto.RaffleAwardListRequestDTO;
 import com.tuto.trigger.api.dto.RaffleAwardListResponseDTO;
 import com.tuto.trigger.api.dto.RaffleRequestDTO;
@@ -33,7 +33,7 @@ import java.util.List;
 @RestController()
 @CrossOrigin("${app.config.cross-origin}")
 @RequestMapping("/api/${app.config.api-version}/raffle/")
-public class RaffleController implements IRaffleService {
+public class RaffleStrategyController implements IRaffleStrategyService {
 
     @Resource
     private IStrategyArmory strategyArmory;

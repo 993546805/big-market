@@ -14,7 +14,7 @@ import java.util.List;
  * @author tu
  * @date 2024-10-14 16:01
  */
-public interface IRaffleService {
+public interface IRaffleStrategyService {
 
     /**
      * 策略装配接口
