@@ -22,6 +22,7 @@ import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * 奖品仓储层
@@ -44,6 +45,8 @@ public class AwardRepository implements IAwardRepository {
     private TransactionTemplate transactionTemplate;
     @Resource
     private EventPublisher eventPublisher;
+    @Resource
+    private ThreadPoolExecutor threadPoolExecutor;
 
 
     @Override
@@ -92,16 +95,20 @@ public class AwardRepository implements IAwardRepository {
             dbRouter.clear();
         }
 
-        try {
-            // 发送消息【在事务外执行，如果失败还有任务补偿】
-            eventPublisher.publish(task.getTopic(), task.getMessage());
-            // 更新数据库记录
-            taskDao.updateTaskSendMessageCompleted(task);
 
-        } catch (Exception e) {
-            log.error("写入中奖记录，发送MQ消息失败 userId: {} topic: {}", userId, task.getTopic());
-            taskDao.updateTaskSendMessageFail(task);
-        }
+        threadPoolExecutor.execute(()->{
+            try {
+                // 发送消息【在事务外执行，如果失败还有任务补偿】
+                eventPublisher.publish(task.getTopic(), task.getMessage());
+                // 更新数据库记录
+                taskDao.updateTaskSendMessageCompleted(task);
+
+            } catch (Exception e) {
+                log.error("写入中奖记录，发送MQ消息失败 userId: {} topic: {}", userId, task.getTopic());
+                taskDao.updateTaskSendMessageFail(task);
+            }
+        });
+
     }
 
 
