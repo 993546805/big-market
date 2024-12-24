@@ -1,4 +1,4 @@
-package com.tuto.test.domain;
+package com.tuto.test.domain.strategy;
 
 import com.tuto.domain.strategy.service.armory.IStrategyArmory;
 import com.tuto.domain.strategy.service.armory.IStrategyDispatch;

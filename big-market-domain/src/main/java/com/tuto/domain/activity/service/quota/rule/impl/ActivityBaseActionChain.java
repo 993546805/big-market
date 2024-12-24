@@ -1,10 +1,10 @@
-package com.tuto.domain.activity.service.rule.impl;
+package com.tuto.domain.activity.service.quota.rule.impl;
 
 import com.tuto.domain.activity.model.entity.ActivityCountEntity;
 import com.tuto.domain.activity.model.entity.ActivityEntity;
 import com.tuto.domain.activity.model.entity.ActivitySkuEntity;
 import com.tuto.domain.activity.model.valobj.ActivityStateVO;
-import com.tuto.domain.activity.service.rule.AbstractActionChain;
+import com.tuto.domain.activity.service.quota.rule.AbstractActionChain;
 import com.tuto.types.enums.ResponseCode;
 import com.tuto.types.exception.AppException;
 import lombok.extern.slf4j.Slf4j;

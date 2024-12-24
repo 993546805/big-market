@@ -1,4 +1,4 @@
-package com.tuto.domain.activity.service.rule;
+package com.tuto.domain.activity.service.quota.rule;
 
 /**
  * @author tu

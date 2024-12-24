@@ -1,21 +1,20 @@
-package com.tuto.infrastructure.persistent.po;
+package com.tuto.domain.activity.model.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-
-import java.util.Date;
+import lombok.NoArgsConstructor;
 
 /**
- * 抽奖活动账户(日)
- *
+ * 活动账单日实体对象
  * @author tu
- * @date 2024-10-15 11:02
+ * @date 2024-11-05 18:13
  */
 @Data
 @Builder
-public class RaffleActivityAccountDay {
-    /** 自增ID */
-    private String id;
+@NoArgsConstructor
+@AllArgsConstructor
+public class ActivityAccountDayEntity {
     /** 用户ID */
     private String userId;
     /** 活动ID */
@@ -26,8 +25,4 @@ public class RaffleActivityAccountDay {
     private Integer dayCount;
     /** 日次数-剩余 */
     private Integer dayCountSurplus;
-    /** 创建时间 */
-    private Date createTime;
-    /** 更新时间 */
-    private Date updateTime;
 }

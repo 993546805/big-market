@@ -1,4 +1,4 @@
-package com.tuto.test.domain;
+package com.tuto.test.domain.strategy;
 
 import com.alibaba.fastjson2.JSON;
 import com.tuto.domain.strategy.model.entity.RaffleAwardEntity;
@@ -7,14 +7,12 @@ import com.tuto.domain.strategy.service.IRaffleStrategy;
 import com.tuto.domain.strategy.service.armory.IStrategyArmory;
 import com.tuto.domain.strategy.service.rule.chain.impl.WeightLogicChain;
 import com.tuto.domain.strategy.service.rule.filter.impl.RuleLockLogicFilter;
-import com.tuto.domain.strategy.service.rule.filter.impl.RuleWeightLogicFilter;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import javax.annotation.Resource;
 import java.util.concurrent.CountDownLatch;

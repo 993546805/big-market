@@ -1,6 +1,9 @@
 package com.tuto.infrastructure.persistent.po;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
@@ -11,6 +14,9 @@ import java.util.Date;
  * @date 2024-10-15 11:02
  */
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class RaffleActivityAccountMonth {
     /** 自增ID */
     private String id;
@@ -19,11 +25,11 @@ public class RaffleActivityAccountMonth {
     /** 活动ID */
     private Long activityId;
     /** 日期（yyyy-mm-dd） */
-    private String day;
+    private String month;
     /** 日次数 */
-    private Integer dayCount;
+    private Integer monthCount;
     /** 日次数-剩余 */
-    private Integer dayCountSurplus;
+    private Integer monthCountSurplus;
     /** 创建时间 */
     private Date createTime;
     /** 更新时间 */

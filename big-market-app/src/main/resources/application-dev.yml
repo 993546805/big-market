@@ -117,5 +117,5 @@ redis:
 # 日志
 logging:
   level:
-    root: debug
+    com.tuto: debug
   config: classpath:logback-spring.xml

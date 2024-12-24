@@ -6,7 +6,7 @@ import com.tuto.domain.activity.model.entity.SkuRechargeEntity;
 /**
  * 抽奖活动订单接口
  */
-public interface IRaffleOrder {
+public interface IRaffleActivityAccountQuotaService {
 
     /**
      * 创建 sku 账户充值订单，给用户增加抽奖次数

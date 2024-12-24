@@ -1,10 +1,8 @@
-package com.tuto.domain.activity.service.rule.factory;
+package com.tuto.domain.activity.service.quota.rule.factory;
 
-import com.tuto.domain.activity.service.rule.IActionChain;
+import com.tuto.domain.activity.service.quota.rule.IActionChain;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;

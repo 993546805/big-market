@@ -1,9 +1,8 @@
 package com.tuto.domain.activity.repository;
 
 import com.tuto.domain.activity.model.aggregate.CreateOrderAggregate;
-import com.tuto.domain.activity.model.entity.ActivityCountEntity;
-import com.tuto.domain.activity.model.entity.ActivityEntity;
-import com.tuto.domain.activity.model.entity.ActivitySkuEntity;
+import com.tuto.domain.activity.model.aggregate.CreatePartakeOrderAggregate;
+import com.tuto.domain.activity.model.entity.*;
 import com.tuto.domain.activity.model.valobj.ActivitySkuStockKeyVO;
 
 import java.util.Date;
@@ -31,4 +30,24 @@ public interface IActivityRepository {
     void updateActivitySkuStock(Long sku);
 
     void clearActivitySkuStock(Long sku);
+
+    /**
+     * 查询未使用的抽奖订单
+     * @param userId 用户ID
+     * @param activityId 活动ID
+     * @return
+     */
+    UserRaffleOrderEntity queryNoUsedRaffleOrder(String userId, Long activityId);
+
+    /**
+     * 保存创建抽奖订单聚合对象
+     * @param createPartakeOrderAggregate
+     */
+    void saveCreatePartakeOrderAggregate(CreatePartakeOrderAggregate createPartakeOrderAggregate);
+
+    ActivityAccountEntity queryActivityAccountByUserId(String userId, Long activityId);
+
+    ActivityAccountMonthEntity queryActivityAccountMonthByUserId(String userId, Long activityId, String month);
+
+    ActivityAccountDayEntity queryActivityAccountDayByUserId(String userId, Long activityId, String day);
 }

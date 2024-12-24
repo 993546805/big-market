@@ -1,27 +1,25 @@
-package com.tuto.domain.activity.service;
+package com.tuto.domain.activity.service.quota;
 
-import com.alibaba.fastjson.JSON;
 import com.tuto.domain.activity.model.aggregate.CreateOrderAggregate;
 import com.tuto.domain.activity.model.entity.*;
 import com.tuto.domain.activity.repository.IActivityRepository;
-import com.tuto.domain.activity.service.rule.IActionChain;
-import com.tuto.domain.activity.service.rule.factory.DefaultActivityChainFactory;
+import com.tuto.domain.activity.service.IRaffleActivityAccountQuotaService;
+import com.tuto.domain.activity.service.quota.rule.IActionChain;
+import com.tuto.domain.activity.service.quota.rule.factory.DefaultActivityChainFactory;
 import com.tuto.types.enums.ResponseCode;
 import com.tuto.types.exception.AppException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-
-import javax.annotation.Resource;
 
 /**
  * @author tu
  * @date 2024-10-17 11:14
  */
 @Slf4j
-public abstract class AbstractRaffleOrder extends RaffleActivitySupport implements IRaffleOrder {
+public abstract class AbstractRaffleActivityAccountQuota extends RaffleActivityAccountQuotaSupport implements IRaffleActivityAccountQuotaService {
 
 
-    public AbstractRaffleOrder(IActivityRepository activityRepository, DefaultActivityChainFactory defaultActivityChainFactory) {
+    public AbstractRaffleActivityAccountQuota(IActivityRepository activityRepository, DefaultActivityChainFactory defaultActivityChainFactory) {
         super(activityRepository,defaultActivityChainFactory);
     }
 

@@ -1,16 +1,15 @@
-package com.tuto.domain.activity.service;
+package com.tuto.domain.activity.service.quota;
 
 import com.tuto.domain.activity.model.aggregate.CreateOrderAggregate;
 import com.tuto.domain.activity.model.entity.*;
 import com.tuto.domain.activity.model.valobj.ActivitySkuStockKeyVO;
 import com.tuto.domain.activity.model.valobj.OrderStateVO;
 import com.tuto.domain.activity.repository.IActivityRepository;
-import com.tuto.domain.activity.service.rule.factory.DefaultActivityChainFactory;
+import com.tuto.domain.activity.service.IRaffleActivitySkuStockService;
+import com.tuto.domain.activity.service.quota.rule.factory.DefaultActivityChainFactory;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.Date;
 
 /**
@@ -18,9 +17,9 @@ import java.util.Date;
  * @date 2024-10-17 11:20
  */
 @Service
-public class RaffleOrderImpl extends AbstractRaffleOrder implements ISkuStock{
+public class RaffleActivityAccountQuotaService extends AbstractRaffleActivityAccountQuota implements IRaffleActivitySkuStockService {
 
-    public RaffleOrderImpl(IActivityRepository activityRepository, DefaultActivityChainFactory defaultActivityChainFactory) {
+    public RaffleActivityAccountQuotaService(IActivityRepository activityRepository, DefaultActivityChainFactory defaultActivityChainFactory) {
         super(activityRepository, defaultActivityChainFactory);
     }
 

@@ -1,6 +1,10 @@
 package com.tuto.infrastructure.persistent.dao;
 
+import cn.bugstack.middleware.db.router.annotation.DBRouter;
+import com.tuto.infrastructure.persistent.po.RaffleActivityAccountDay;
 import org.apache.ibatis.annotations.Mapper;
+
+import javax.annotation.Resource;
 
 /**
  * @author tu
@@ -8,4 +12,10 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface IRaffleActivityAccountDayDao {
+    int updateActivityAccountDaySubtractionQuota(RaffleActivityAccountDay raffleActivityAccountDay);
+
+    void insertActivityAccountDay(RaffleActivityAccountDay raffleActivityAccountDay);
+
+    @DBRouter
+    RaffleActivityAccountDay queryActivityAccountDayByUserId(RaffleActivityAccountDay raffleActivityAccountDay);
 }

@@ -1,8 +1,8 @@
-package com.tuto.test.domain;
+package com.tuto.test.domain.activity;
 
 import com.alibaba.fastjson.JSON;
 import com.tuto.domain.activity.model.entity.SkuRechargeEntity;
-import com.tuto.domain.activity.service.IRaffleOrder;
+import com.tuto.domain.activity.service.IRaffleActivityAccountQuotaService;
 import com.tuto.domain.activity.service.armory.IActivityArmory;
 import com.tuto.types.exception.AppException;
 import lombok.extern.slf4j.Slf4j;
@@ -23,10 +23,10 @@ import java.util.concurrent.CountDownLatch;
 @Slf4j
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class RaffleActivityTest {
+public class RaffleActivityAccountQuotaTest {
 
     @Resource
-    private IRaffleOrder raffleOrder;
+    private IRaffleActivityAccountQuotaService raffleOrder;
     @Resource
     private IActivityArmory activityArmory;
 

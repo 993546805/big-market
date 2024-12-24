@@ -3,7 +3,6 @@ package com.tuto.trigger.listener;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.tuto.domain.activity.event.AwardStockZeroMessageEvent;
-import com.tuto.domain.activity.service.ISkuStock;
 import com.tuto.domain.strategy.service.IRaffleStock;
 import com.tuto.types.event.BaseEvent;
 import lombok.extern.slf4j.Slf4j;

@@ -2,7 +2,8 @@ package com.tuto.domain.activity.service;
 
 import com.tuto.domain.activity.model.valobj.ActivitySkuStockKeyVO;
 
-public interface ISkuStock {
+
+public interface IRaffleActivitySkuStockService {
 
     /**
      * 获取活动 sku库存消耗队列
