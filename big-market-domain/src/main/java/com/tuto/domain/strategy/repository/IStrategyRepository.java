@@ -68,4 +68,6 @@ public interface IStrategyRepository {
     void clearStrategyAwardStock(Long strategyId, Integer awardId);
 
     Long queryStrategyIdByActivity(Long activityId);
+
+    Map<String, Integer> queryAwardRuleLockCount(String[] treeIds);
 }

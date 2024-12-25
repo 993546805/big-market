@@ -58,6 +58,8 @@ public abstract class AbstractRaffleActivityAccountQuota extends RaffleActivityA
 
     }
 
+
+
     protected abstract void doSaveOrder(CreateOrderAggregate createOrderAggregate);
 
     protected abstract CreateOrderAggregate buildOrderAggregate(SkuRechargeEntity skuRechargeEntity, ActivitySkuEntity activitySkuEntity, ActivityEntity activityEntity, ActivityCountEntity activityCountEntity);
