@@ -18,7 +18,7 @@ import javax.annotation.Resource;
  * @date 2024-10-31 23:43
  */
 @Slf4j
-@Component
+//@Component
 public class StrategyAwardStockZeroCustomer {
 
     @Value("${spring.rabbitmq.topic.strategy_award_sku_stock_zero}")

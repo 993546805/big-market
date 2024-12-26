@@ -50,14 +50,14 @@
 
     <update id="updateActivityAccountMonthSurplusImageQuota">
         update raffle_activity_account
-        set month_count_surplus = month_count_surplus - 1,update_time = now()
+        set month_count_surplus = #{monthCountSurplus} - 1,update_time = now()
         where user_id = #{userId} and activity_id = #{activityId}
         and month_count_surplus > 0
     </update>
 
     <update id="updateActivityAccountDaySurplusImageQuota">
         update raffle_activity_account
-        set day_count_surplus = day_count_surplus - 1,update_time = now()
+        set day_count_surplus = #{dayCountSurplus} - 1,update_time = now()
         where user_id = #{userId} and activity_id = #{activityId}
         and day_count_surplus > 0
     </update>
@@ -69,5 +69,15 @@
         where user_id = #{userId} and activity_id = #{activityId}
     </select>
 
+    <update id="updateActivityAccountMonthSubtractionQuota">
+        update raffle_activity_account
+        set month_count_surplus = month_count_surplus - 1,update_time = now()
+        where user_id = #{userId} and activity_id = #{activityId} and month_count_surplus > 0
+    </update>
 
+    <update id="updateActivityAccountDaySubtractionQuota">
+        update raffle_activity_account
+        set day_count_surplus = day_count_surplus - 1,update_time = now()
+        where user_id = #{userId} and activity_id = #{activityId} and day_count_surplus > 0
+    </update>
 </mapper>

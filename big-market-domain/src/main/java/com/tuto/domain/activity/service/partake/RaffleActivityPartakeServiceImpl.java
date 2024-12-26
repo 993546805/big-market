@@ -102,6 +102,7 @@ public class RaffleActivityPartakeServiceImpl extends AbstractRaffleActivityPart
                 .orderId(RandomStringUtils.randomNumeric(12))
                 .orderTime(currentDate)
                 .orderState(UserRaffleOrderStateVO.CREATE)
+                .endDateTime(activityEntity.getEndDateTime())
                 .build();
     }
 

@@ -7,6 +7,7 @@ import com.tuto.domain.activity.model.valobj.ActivitySkuStockKeyVO;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 public interface IActivityRepository {
 
@@ -24,9 +25,9 @@ public interface IActivityRepository {
 
     void activitySkuStockConsumeSendQueue(ActivitySkuStockKeyVO activitySkuStockKeyVO);
 
-    ActivitySkuStockKeyVO takeQueueValue();
+    ActivitySkuStockKeyVO takeQueueValue(String sku);
 
-    void clearQueueValue();
+    void clearQueueValue(String sku);
 
     void updateActivitySkuStock(Long sku);
 
@@ -55,4 +56,7 @@ public interface IActivityRepository {
     List<ActivitySkuEntity> queryActivitySkuListByActivityId(Long activityId);
 
     Integer queryRaffleActivityAccountDayPartakeCount(Long activityId, String userId);
+
+    Set<Long> queryActivitySkuList();
+
 }

@@ -1,5 +1,7 @@
 package com.tuto.domain.strategy.service.armory;
 
+import java.util.Date;
+
 /**
  * 策略抽奖调度
  * @author tu
@@ -27,7 +29,8 @@ public interface IStrategyDispatch {
      * 扣减库存
      * @param strategyId 策略ID
      * @param awardId 奖品 ID
+     * @param endDateTime 结束时间
      * @return 是否扣减成功
      */
-    Boolean subtractionAwardStock(Long strategyId, Integer awardId);
+    Boolean subtractionAwardStock(Long strategyId, Integer awardId, Date endDateTime);
 }

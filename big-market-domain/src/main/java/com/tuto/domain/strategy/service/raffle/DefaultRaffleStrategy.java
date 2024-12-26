@@ -1,10 +1,6 @@
 package com.tuto.domain.strategy.service.raffle;
 
-import com.tuto.domain.strategy.model.entity.RaffleFactorEntity;
-import com.tuto.domain.strategy.model.entity.RuleActionEntity;
-import com.tuto.domain.strategy.model.entity.RuleMatterEntity;
 import com.tuto.domain.strategy.model.entity.StrategyAwardEntity;
-import com.tuto.domain.strategy.model.valobj.RuleLogicCheckTypeVO;
 import com.tuto.domain.strategy.model.valobj.RuleTreeVO;
 import com.tuto.domain.strategy.model.valobj.StrategyAwardRuleModelVO;
 import com.tuto.domain.strategy.model.valobj.StrategyAwardStockKeyVO;
@@ -16,20 +12,14 @@ import com.tuto.domain.strategy.service.IRaffleStock;
 import com.tuto.domain.strategy.service.armory.IStrategyDispatch;
 import com.tuto.domain.strategy.service.rule.chain.ILogicChain;
 import com.tuto.domain.strategy.service.rule.chain.factory.DefaultChainFactory;
-import com.tuto.domain.strategy.service.rule.filter.ILogicFilter;
 import com.tuto.domain.strategy.service.rule.filter.factory.DefaultLogicFactory;
 import com.tuto.domain.strategy.service.rule.tree.factory.DefaultTreeFactory;
 import com.tuto.domain.strategy.service.rule.tree.factory.engine.IDecisionTreeEngine;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.*;
 
 /**
  * @author tu
@@ -47,18 +37,24 @@ public class DefaultRaffleStrategy extends AbstractRaffleStrategy implements IRa
     }
 
     @Override
-    protected DefaultTreeFactory.StrategyAwardVO raffleLogicTree(String userId, Long strategyId, Integer awardId) {
+    public DefaultTreeFactory.StrategyAwardVO raffleLogicTree(String userId, Long strategyId, Integer awardId, Date endDateTime) {
         StrategyAwardRuleModelVO strategyAwardRuleModelVO = repository.queryStrategyAwardRuleModelVO(strategyId, awardId);
         if (null == strategyAwardRuleModelVO) {
             return DefaultTreeFactory.StrategyAwardVO.builder().awardId(awardId).build();
         }
         RuleTreeVO ruleTreeVO = repository.queryRuleTreeVOByTreeId(strategyAwardRuleModelVO.getRuleModels());
         if (null == ruleTreeVO) {
-            throw new RuntimeException("存在抽奖策略配置的规则模型 Key,未在库表 rule_tree rule_tree_node rule_tree_line 配置对应的规则信息 " + strategyAwardRuleModelVO.getRuleModels());
+            throw new RuntimeException("存在抽奖策略配置的规则模型 Key，未在库表 rule_tree、rule_tree_node、rule_tree_line 配置对应的规则树信息 " + strategyAwardRuleModelVO.getRuleModels());
         }
-
         IDecisionTreeEngine treeEngine = defaultTreeFactory.openLogicTree(ruleTreeVO);
-        return treeEngine.process(userId, strategyId, awardId);
+        return treeEngine.process(userId, strategyId, awardId, endDateTime);
+    }
+
+
+    @Override
+    protected DefaultTreeFactory.StrategyAwardVO raffleLogicTree(String userId, Long strategyId, Integer awardId) {
+
+        return raffleLogicTree(userId, strategyId, awardId, null);
     }
 
     @Override

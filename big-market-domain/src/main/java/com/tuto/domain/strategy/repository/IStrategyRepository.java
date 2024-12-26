@@ -7,6 +7,7 @@ import com.tuto.domain.strategy.model.valobj.RuleTreeVO;
 import com.tuto.domain.strategy.model.valobj.StrategyAwardRuleModelVO;
 import com.tuto.domain.strategy.model.valobj.StrategyAwardStockKeyVO;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -60,8 +61,9 @@ public interface IStrategyRepository {
 
     void updateStrategyAwardStock(Long strategyId, Integer awardId);
 
+    Boolean subtractionAwardStock(String cacheKey);
 
-    Boolean subtractionAwardStock(Long strategyId, Integer awardId);
+    Boolean subtractionAwardStock(String cacheKey, Date endDateTime);
 
     void clearQueueValue();
 
@@ -70,4 +72,7 @@ public interface IStrategyRepository {
     Long queryStrategyIdByActivity(Long activityId);
 
     Map<String, Integer> queryAwardRuleLockCount(String[] treeIds);
+
+
+    Integer queryTodayUserRaffleCount(String userId, Long strategyId);
 }

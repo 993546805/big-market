@@ -15,6 +15,7 @@ import com.tuto.types.exception.AppException;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RBlockingQueue;
 import org.redisson.api.RDelayedQueue;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 
@@ -52,6 +53,10 @@ public class StrategyRepository implements IStrategyRepository {
     private EventPublisher eventPublisher;
     @Resource
     private AwardStockZeroMessageEvent awardStockZeroMessageEvent;
+    @Autowired
+    private IRaffleActivityAccountDayDao raffleActivityAccountDayDao;
+    @Autowired
+    private IRaffleActivityDao iRaffleActivityDao;
 
     @Override
     public List<StrategyAwardEntity> queryStrategyAwardList(Long strategyId) {
@@ -77,6 +82,7 @@ public class StrategyRepository implements IStrategyRepository {
             strategyAwardEntity.setAwardCountSurplus(strategyAward.getAwardCountSurplus());
             strategyAwardEntity.setAwardRate(strategyAward.getAwardRate());
             strategyAwardEntity.setSort(strategyAward.getSort());
+            strategyAwardEntity.setRuleModels(strategyAward.getRuleModels());
             list.add(strategyAwardEntity);
         }
         // 缓存到Redis
@@ -269,14 +275,36 @@ public class StrategyRepository implements IStrategyRepository {
     }
 
     @Override
-    public Boolean subtractionAwardStock(Long strategyId, Integer awardId) {
-        String cacheKey = Constants.RedisKey.STRATEGY_AWARD_COUNT_KEY + strategyId + Constants.UNDERLINE + awardId;
-        return subtractionAwardStock(cacheKey,strategyId,awardId);
+    public Boolean subtractionAwardStock(String cacheKey) {
+        return subtractionAwardStock(cacheKey,null);
+    }
+
+    @Override
+    public Boolean subtractionAwardStock(String cacheKey, Date endDateTime) {
+        long surplus = redisService.decr(cacheKey);
+        if (surplus < 0){
+            // 库存小于 0 恢复 0
+            redisService.setAtomicLong(cacheKey, 0);
+            return false;
+        }
+        // 1. 按照 cacheKey decr 后的值,如 99 98 97 和 key 组成为库存锁进行使用.
+        // 2. 加锁为了兜底,如果后续有恢复库存,手动处理等,也不会超卖.因为多有的可用库存 key,都被加锁了
+        String lockKey = cacheKey + Constants.UNDERLINE + surplus;
+        Boolean lock = false;
+        if (null != endDateTime) {
+            long expireMills = endDateTime.getTime() - System.currentTimeMillis() + TimeUnit.DAYS.toMillis(1);
+            lock = redisService.setNx(lockKey, expireMills, TimeUnit.MICROSECONDS);
+        } else {
+            lock = redisService.setNx(lockKey);
+        }
+        if (!lock) {
+            log.info("策略奖品库存加锁失败 {}",lockKey);
+        }
+        return lock;
     }
 
 
-
-    public Boolean subtractionAwardStock(String cacheKey,Long strategyId, Integer awardId) {
+    public Boolean subtractionAwardStock(String cacheKey,Long strategyId, Integer awardId,Date endDateTime) {
         long surplus = redisService.decr(cacheKey);
         if(surplus == 0) {
             // 库存消耗没了以后，发送MQ消息，更新数据库库存
@@ -339,6 +367,21 @@ public class StrategyRepository implements IStrategyRepository {
             resultMap.put(treeId, ruleCount);
         }
         return resultMap;
+    }
+
+    @Override
+    public Integer queryTodayUserRaffleCount(String userId, Long strategyId) {
+        Long activityId = iRaffleActivityDao.queryActivityIdByStrategyId(strategyId);
+        // 封装参数
+        RaffleActivityAccountDay raffleActivityAccountDayReq = new RaffleActivityAccountDay();
+        raffleActivityAccountDayReq.setUserId(userId);
+        raffleActivityAccountDayReq.setActivityId(activityId);
+        raffleActivityAccountDayReq.setDay(raffleActivityAccountDayReq.currentDay());
+        RaffleActivityAccountDay raffleActivityAccountDay = raffleActivityAccountDayDao.queryActivityAccountDayByUserId(raffleActivityAccountDayReq);
+        if (null == raffleActivityAccountDay) {
+            return 0;
+        }
+        return raffleActivityAccountDay.getDayCount() - raffleActivityAccountDay.getDayCountSurplus();
     }
 
     @Override
