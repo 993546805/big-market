@@ -2,6 +2,8 @@ package com.tuto.domain.activity.service;
 
 import com.tuto.domain.activity.model.valobj.ActivitySkuStockKeyVO;
 
+import java.util.Set;
+
 
 public interface IRaffleActivitySkuStockService {
 
@@ -10,12 +12,12 @@ public interface IRaffleActivitySkuStockService {
      * @return
      * @throws InterruptedException
      */
-    ActivitySkuStockKeyVO takeQueueValue() throws InterruptedException;
+    ActivitySkuStockKeyVO takeQueueValue(String sku) throws InterruptedException;
 
     /**
      * 清空队列
      */
-    void clearQueueValue();
+    void clearQueueValue(String sku);
 
     /**
      * 缓存库存已消耗完毕,清空数据库库存
@@ -26,5 +28,7 @@ public interface IRaffleActivitySkuStockService {
      * 延迟队列 + 任务趋势更新活动 sku 库存
      */
     void updateActivitySkuStock(Long sku);
+
+    Set<Long> getSkuSet();
 
 }

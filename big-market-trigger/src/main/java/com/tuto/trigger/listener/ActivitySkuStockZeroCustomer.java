@@ -37,7 +37,7 @@ public class ActivitySkuStockZeroCustomer {
             // 更新库存
             skuStock.clearActivitySkuStock(sku);
             // 清空队列
-            skuStock.clearQueueValue();
+            skuStock.clearQueueValue(sku.toString());
         } catch (Exception e) {
             log.error("监听活动 sku 库存消耗为 0 消息异常 topic:{} message:{}", topic, message, e);
             throw e;

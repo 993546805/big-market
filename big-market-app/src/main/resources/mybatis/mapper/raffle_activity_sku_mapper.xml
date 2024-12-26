@@ -40,4 +40,8 @@
         from raffle_activity_sku
         where activity_id = #{activityId}
     </select>
+
+    <select id="queryActivitySKuList" resultType="java.lang.Long">
+        select sku from raffle_activity_sku
+    </select>
 </mapper>
