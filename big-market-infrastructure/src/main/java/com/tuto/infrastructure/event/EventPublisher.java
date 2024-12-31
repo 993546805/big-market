@@ -19,6 +19,7 @@ public class EventPublisher {
     private RabbitTemplate rabbitTemplate;
 
 
+
     public void publish(String topic, BaseEvent.EventMessage<?> eventMessage){
         try {
             String messageJson = JSON.toJSONString(eventMessage);
