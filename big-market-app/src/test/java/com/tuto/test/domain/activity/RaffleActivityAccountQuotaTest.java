@@ -40,13 +40,22 @@ public class RaffleActivityAccountQuotaTest {
                 .userId("tuhb")
                 .outBusinessNo("sdlkfjo0011")
                 .build();
-        String orderId = raffleOrder.createRaffleActivityOrder(activityShopCartEntity);
+        String orderId = raffleOrder.createOrder(activityShopCartEntity);
         log.info("测试结果：{}", JSON.toJSONString(orderId));
     }
 
 
     @Before
     public void setUp(){
+        log.info("装配活动: {}",activityArmory.assembleActivitySku(9011L));
+    }
+
+
+    /**
+     * 用于测试: 装配 SKU
+     */
+    @Test
+    public void test_armorySKu() {
         log.info("装配活动: {}",activityArmory.assembleActivitySku(9011L));
     }
 
@@ -64,7 +73,7 @@ public class RaffleActivityAccountQuotaTest {
                 skuRechargeEntity.setSku(9011L);
                 skuRechargeEntity.setUserId("tuhb");
                 skuRechargeEntity.setOutBusinessNo(RandomStringUtils.randomNumeric(12));
-                String orderId = raffleOrder.createRaffleActivityOrder(skuRechargeEntity);
+                String orderId = raffleOrder.createOrder(skuRechargeEntity);
                 log.info("测试结果：{}",orderId);
             } catch (AppException e) {
                 log.warn(e.getInfo());

@@ -1,11 +1,15 @@
 package com.tuto.trigger.http;
 
+import com.alibaba.fastjson.JSON;
 import com.tuto.domain.activity.model.entity.UserRaffleOrderEntity;
 import com.tuto.domain.activity.service.IRaffleActivityPartakeService;
 import com.tuto.domain.activity.service.armory.IActivityArmory;
 import com.tuto.domain.award.model.entity.UserAwardRecordEntity;
 import com.tuto.domain.award.model.valobj.AwardStateVO;
 import com.tuto.domain.award.service.IAwardService;
+import com.tuto.domain.rebate.IBehaviorRebateService;
+import com.tuto.domain.rebate.model.entity.BehaviorEntity;
+import com.tuto.domain.rebate.model.valobj.BehaviorTypeVO;
 import com.tuto.domain.strategy.model.entity.RaffleAwardEntity;
 import com.tuto.domain.strategy.model.entity.RaffleFactorEntity;
 import com.tuto.domain.strategy.service.IRaffleStrategy;
@@ -21,7 +25,9 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 抽奖活动服务,在不引用 applications/case层时,需要让接口实现层来做领域的串联,一些较大规模的系统,需要加入 case 层
@@ -35,6 +41,8 @@ import java.util.Date;
 @RequestMapping("/api/${app.config.api-version}/raffle/activity")
 public class RaffleActivityController implements IRaffleActivityService {
 
+    private final SimpleDateFormat dateFormatDay = new SimpleDateFormat("yyyyMMdd");
+
     @Resource
     private IRaffleActivityPartakeService raffleActivityPartakeService;
     @Resource
@@ -45,6 +53,8 @@ public class RaffleActivityController implements IRaffleActivityService {
     private IActivityArmory activityArmory;
     @Resource
     private IStrategyArmory strategyArmory;
+    @Resource
+    private IBehaviorRebateService behaviorRebateService;
 
     /**
      * 活动装配 - 数据预热 | 把活动配置的对应的 sku 一起装配
@@ -149,6 +159,37 @@ public class RaffleActivityController implements IRaffleActivityService {
         } catch (Exception e) {
             log.error("活动抽奖失败 userId:{} activityId:{}", request.getUserId(), request.getActivityId(), e);
             return Response.<ActivityDrawResponseDTO>builder()
+                    .code(ResponseCode.UN_ERROR.getCode())
+                    .info(ResponseCode.UN_ERROR.getInfo())
+                    .build();
+        }
+    }
+
+    @RequestMapping(value = "calendar_sign_rebate", method = RequestMethod.POST)
+    @Override
+    public Response<Boolean> calendarSignRebate(String userId) {
+        try {
+            log.info("日历签到返奖 userId: {}", userId);
+            BehaviorEntity behaviorEntity = new BehaviorEntity();
+            behaviorEntity.setUserId(userId);
+            behaviorEntity.setBehaviorTypeVO(BehaviorTypeVO.SING);
+            behaviorEntity.setOutBusinessNo(dateFormatDay.format(new Date()));
+            List<String> orderIds = behaviorRebateService.createOrder(behaviorEntity);
+            log.info("日历签到返利完成 userId: {} orderIds: {}", userId, JSON.toJSONString(orderIds));
+
+            return Response.<Boolean>builder()
+                    .code(ResponseCode.SUCCESS.getCode())
+                    .info(ResponseCode.SUCCESS.getInfo())
+                    .build();
+        } catch (AppException e) {
+            log.error("日历签到返利异常 userId: {}", userId, e);
+            return Response.<Boolean>builder()
+                    .code(e.getCode())
+                    .info(e.getInfo())
+                    .build();
+        } catch (Exception e) {
+            log.error("日历签到返利失败 userId: {}", userId);
+            return Response.<Boolean>builder()
                     .code(ResponseCode.UN_ERROR.getCode())
                     .info(ResponseCode.UN_ERROR.getInfo())
                     .build();

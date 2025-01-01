@@ -16,6 +16,8 @@ public class RaffleActivityOrder {
     private Long id;
     /** 用户 ID */
     private String userId;
+    /** sku */
+    private Long sku;
     /** 活动 ID */
     private Long activityId;
     /** 活动名称 */
@@ -26,6 +28,12 @@ public class RaffleActivityOrder {
     private String orderId;
     /** 订单时间 */
     private Date orderTime;
+    /** 总次数 */
+    private Integer totalCount;
+    /** 日次数 */
+    private Integer dayCount;
+    /** 月次数 */
+    private Integer monthCount;
     /** 状态;not_used,used,expire */
     private String state;
     /** 业务防重 ID */
