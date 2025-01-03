@@ -27,7 +27,7 @@ public class UserAwardRecord {
     /** 中奖时间 */
     private Date awardTime;
     /** 状态： create 创建 completed 完成 */
-    private Integer awardState;
+    private String awardState;
     /** 创建时间 */
     private Date createTime;
     /** 更新时间 */

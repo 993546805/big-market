@@ -3,10 +3,7 @@ package com.tuto.test.trigger.http;
 import com.alibaba.fastjson2.JSON;
 import com.tuto.trigger.api.IRaffleActivityService;
 import com.tuto.trigger.api.IRaffleStrategyService;
-import com.tuto.trigger.api.dto.ActivityDrawRequestDTO;
-import com.tuto.trigger.api.dto.ActivityDrawResponseDTO;
-import com.tuto.trigger.api.dto.RaffleAwardListRequestDTO;
-import com.tuto.trigger.api.dto.RaffleAwardListResponseDTO;
+import com.tuto.trigger.api.dto.*;
 import com.tuto.types.model.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
@@ -45,5 +42,16 @@ public class RaffleStrategyControllerTest {
     }
 
 
+    /**
+     * 查询抽奖策略规则权重
+     */
+    @Test
+    public void test_queryRaffleStrategyRuleWeight() {
+        UserActivityAccountRequestDTO req = new UserActivityAccountRequestDTO();
+        req.setActivityId(100301L);
+        req.setUserId("xiaofuge");
+        Response<List<RaffleStrategyRuleWeightResponseDTO>> response = raffleStrategyService.queryRaffleStrategyRuleWeight(req);
+        log.info("测试结果: {}",JSON.toJSONString(response));
+    }
 
 }

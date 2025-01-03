@@ -25,10 +25,14 @@ public class UserBehaviorRebateOrder {
     private String rebateType;
     /** 返利配置 */
     private String rebateConfig;
+    /** 外部业务号 */
+    private String outBusinessNo;
     /** 业务 ID */
     private String bizId;
     /** 创建时间 */
     private Date createTime;
     /** 更新时间 */
     private Date updateTime;
+
+
 }

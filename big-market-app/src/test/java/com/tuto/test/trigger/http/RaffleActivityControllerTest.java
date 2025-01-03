@@ -45,5 +45,23 @@ public class RaffleActivityControllerTest {
         log.info("请求参数：{}", JSON.toJSONString(request));
         log.info("测试结果：{}", JSON.toJSONString(response));
     }
+
+    /**
+     * 用于测试: 查询是否签到
+     */
+    @Test
+    public void test_isCalendarSignRebate() {
+        Response<Boolean> isCalendarSignRebate = raffleActivityService.isCalendarSignRebate("xiaofuge");
+        log.info("测试结果：{}", JSON.toJSONString(isCalendarSignRebate));
+    }
+
+    /**
+     * 用于测试: 签到
+     */
+    @Test
+    public void test_calendarSignRebate() {
+        Response<Boolean> calendarSignRebate = raffleActivityService.calendarSignRebate("xiaofuge");
+        log.info("测试结果：{}", JSON.toJSONString(calendarSignRebate));
+    }
 }
 

@@ -2,6 +2,8 @@ package com.tuto.trigger.api;
 
 import com.tuto.trigger.api.dto.ActivityDrawRequestDTO;
 import com.tuto.trigger.api.dto.ActivityDrawResponseDTO;
+import com.tuto.trigger.api.dto.UserActivityAccountRequestDTO;
+import com.tuto.trigger.api.dto.UserActivityAccountResponseDTO;
 import com.tuto.types.model.Response;
 
 /**
@@ -32,4 +34,20 @@ public interface IRaffleActivityService {
      * @return 是否签到返利成功
      */
     Response<Boolean> calendarSignRebate(String userId);
+
+    /**
+     * 判断是否完成日历签到返利接口
+     *
+     * @param userId 用户ID
+     * @return 是否完成日历签到返利接口
+     */
+    Response<Boolean> isCalendarSignRebate(String userId);
+
+    /**
+     * 查询用户参与活动信息
+     *
+     * @param request 用户活动账户请求对象
+     * @return 用户活动账户响应对象
+     */
+    Response<UserActivityAccountResponseDTO> queryActivityAccount(UserActivityAccountRequestDTO request);
 }

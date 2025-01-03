@@ -6,8 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 行为返利订单实体对象
  * @author tu
+ * 行为返利订单实体对象
  * @date 2024-12-30 下午9:14
  */
 @Data
@@ -29,4 +29,6 @@ public class BehaviorRebateOrderEntity {
     private String rebateConfig;
     /** 业务 ID - 拼接的唯一值 */
     private String bizId;
+    /** 业务流水号 */
+    private String outBusinessNo;
 }

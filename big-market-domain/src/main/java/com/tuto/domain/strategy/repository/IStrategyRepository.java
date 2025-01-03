@@ -4,6 +4,7 @@ import com.tuto.domain.strategy.model.entity.StrategyAwardEntity;
 import com.tuto.domain.strategy.model.entity.StrategyEntity;
 import com.tuto.domain.strategy.model.entity.StrategyRuleEntity;
 import com.tuto.domain.strategy.model.valobj.RuleTreeVO;
+import com.tuto.domain.strategy.model.valobj.RuleWeightVO;
 import com.tuto.domain.strategy.model.valobj.StrategyAwardRuleModelVO;
 import com.tuto.domain.strategy.model.valobj.StrategyAwardStockKeyVO;
 
@@ -75,4 +76,6 @@ public interface IStrategyRepository {
 
 
     Integer queryTodayUserRaffleCount(String userId, Long strategyId);
+
+    List<RuleWeightVO> queryAwardRuleWeight(Long strategyId);
 }

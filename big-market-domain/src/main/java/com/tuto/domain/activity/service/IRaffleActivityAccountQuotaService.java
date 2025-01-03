@@ -1,6 +1,7 @@
 package com.tuto.domain.activity.service;
 
 
+import com.tuto.domain.activity.model.entity.ActivityAccountEntity;
 import com.tuto.domain.activity.model.entity.SkuRechargeEntity;
 
 /**
@@ -26,4 +27,7 @@ public interface IRaffleActivityAccountQuotaService {
      * @return
      */
     Integer queryRaffleActivityAccountDayPartakeCount(Long activityId, String userId);
+
+
+    ActivityAccountEntity queryActivityAccountEntity(Long activityId, String userId);
 }

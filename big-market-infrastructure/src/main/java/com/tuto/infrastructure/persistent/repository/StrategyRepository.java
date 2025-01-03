@@ -6,6 +6,7 @@ import com.tuto.domain.strategy.model.entity.StrategyEntity;
 import com.tuto.domain.strategy.model.entity.StrategyRuleEntity;
 import com.tuto.domain.strategy.model.valobj.*;
 import com.tuto.domain.strategy.repository.IStrategyRepository;
+import com.tuto.domain.strategy.service.rule.chain.factory.DefaultChainFactory;
 import com.tuto.infrastructure.event.EventPublisher;
 import com.tuto.infrastructure.persistent.dao.*;
 import com.tuto.infrastructure.persistent.po.*;
@@ -19,11 +20,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 
-import static com.tuto.types.enums.ResponseCode.UN_ASSEMBLED_STRATEGY_ARMORY;
-
 import javax.annotation.Resource;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+
+import static com.tuto.types.enums.ResponseCode.UN_ASSEMBLED_STRATEGY_ARMORY;
 
 /**
  * @author tu
@@ -276,13 +277,13 @@ public class StrategyRepository implements IStrategyRepository {
 
     @Override
     public Boolean subtractionAwardStock(String cacheKey) {
-        return subtractionAwardStock(cacheKey,null);
+        return subtractionAwardStock(cacheKey, null);
     }
 
     @Override
     public Boolean subtractionAwardStock(String cacheKey, Date endDateTime) {
         long surplus = redisService.decr(cacheKey);
-        if (surplus < 0){
+        if (surplus < 0) {
             // 库存小于 0 恢复 0
             redisService.setAtomicLong(cacheKey, 0);
             return false;
@@ -298,18 +299,18 @@ public class StrategyRepository implements IStrategyRepository {
             lock = redisService.setNx(lockKey);
         }
         if (!lock) {
-            log.info("策略奖品库存加锁失败 {}",lockKey);
+            log.info("策略奖品库存加锁失败 {}", lockKey);
         }
         return lock;
     }
 
 
-    public Boolean subtractionAwardStock(String cacheKey,Long strategyId, Integer awardId,Date endDateTime) {
+    public Boolean subtractionAwardStock(String cacheKey, Long strategyId, Integer awardId, Date endDateTime) {
         long surplus = redisService.decr(cacheKey);
-        if(surplus == 0) {
+        if (surplus == 0) {
             // 库存消耗没了以后，发送MQ消息，更新数据库库存
             eventPublisher.publish(awardStockZeroMessageEvent.getTopic(), awardStockZeroMessageEvent.buildEventMessage(AwardStockZeroMessageEvent.AwardStockZeroVo.builder().strategyId(strategyId).awardId(awardId).build()));
-        }else if(surplus < 0){
+        } else if (surplus < 0) {
             // 重置库存为0
             redisService.setValue(cacheKey, 0);
             return false;
@@ -382,6 +383,54 @@ public class StrategyRepository implements IStrategyRepository {
             return 0;
         }
         return raffleActivityAccountDay.getDayCount() - raffleActivityAccountDay.getDayCountSurplus();
+    }
+
+    @Override
+    public List<RuleWeightVO> queryAwardRuleWeight(Long strategyId) {
+        // 优先从缓存获取
+        String cacheKey = Constants.RedisKey.STRATEGY_RULE_WEIGHT_KEY + strategyId;
+        List<RuleWeightVO> ruleWeightVOS = redisService.getValue(cacheKey);
+        if (null != ruleWeightVOS) {
+            return ruleWeightVOS;
+        }
+
+        ruleWeightVOS = new ArrayList<>();
+        // 1.查询权重规则配置
+        StrategyRule strategyRuleReq = new StrategyRule();
+        strategyRuleReq.setStrategyId(strategyId);
+        strategyRuleReq.setRuleModel(DefaultChainFactory.LogicModel.RULE_WEIGHT.getCode());
+        String ruleValue = strategyRuleDao.queryStrategyRuleValue(strategyRuleReq);
+        // 2.借助实体对象转换规则
+        StrategyRuleEntity strategyRuleEntity = new StrategyRuleEntity();
+        strategyRuleEntity.setRuleModel(DefaultChainFactory.LogicModel.RULE_WEIGHT.getCode());
+        strategyRuleEntity.setRuleValue(ruleValue);
+        Map<String, List<Integer>> ruleWeightValues = strategyRuleEntity.getRuleWeightValues();
+        // 3. 遍历规则组装奖品数据
+        Set<String> ruleWeightKeySet = ruleWeightValues.keySet();
+        for (String ruleWeightKey : ruleWeightKeySet) {
+            List<Integer> awardIds = ruleWeightValues.get(ruleWeightKey);
+            List<RuleWeightVO.Award> awardList = new ArrayList<>();
+            for (Integer awardId : awardIds) {
+                StrategyAward strategyAwardReq = new StrategyAward();
+                strategyAwardReq.setStrategyId(strategyId);
+                strategyAwardReq.setAwardId(awardId);
+                StrategyAward strategyAward = strategyAwardDao.queryStrategyAward(strategyAwardReq);
+                awardList.add(RuleWeightVO.Award.builder()
+                        .awardId(strategyAward.getAwardId())
+                        .awardTitle(strategyAward.getAwardTitle())
+                        .build());
+            }
+            ruleWeightVOS.add(RuleWeightVO.builder()
+                            .awardIds(awardIds)
+                            .ruleValue(ruleValue)
+                            .weight(Integer.valueOf(ruleWeightKey.split(Constants.COLON)[0]))
+                            .awardList(awardList)
+                    .build());
+        }
+
+        // 设置缓存 - 实际场景中,这类数据,可以在活动下架的时候同意清空缓存
+        redisService.setValue(cacheKey, ruleWeightVOS);
+        return ruleWeightVOS;
     }
 
     @Override

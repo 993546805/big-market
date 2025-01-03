@@ -70,7 +70,7 @@ public class AwardRepository implements IAwardRepository {
         userAwardRecord.setAwardId(userAwardRecordEntity.getAwardId());
         userAwardRecord.setAwardTitle(userAwardRecordEntity.getAwardTitle());
         userAwardRecord.setAwardTime(userAwardRecordEntity.getAwardTime());
-        userAwardRecord.setAwardState(userAwardRecordEntity.getAwardId());
+        userAwardRecord.setAwardState(userAwardRecordEntity.getAwardStateVO().getCode());
 
         Task task = new Task();
         task.setUserId(taskEntity.getUserId());

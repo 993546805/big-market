@@ -1,6 +1,7 @@
 package com.tuto.domain.rebate;
 
 import com.tuto.domain.rebate.model.entity.BehaviorEntity;
+import com.tuto.domain.rebate.model.entity.BehaviorRebateOrderEntity;
 
 import java.util.List;
 
@@ -12,4 +13,6 @@ import java.util.List;
 public interface IBehaviorRebateService {
 
     List<String> createOrder(BehaviorEntity entity);
+
+    List<BehaviorRebateOrderEntity> queryOrderByOutBusinessNo(String userId, String outBusinessNo);
 }

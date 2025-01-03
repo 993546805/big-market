@@ -1,10 +1,7 @@
 package com.tuto.trigger.api;
 
 
-import com.tuto.trigger.api.dto.RaffleAwardListRequestDTO;
-import com.tuto.trigger.api.dto.RaffleAwardListResponseDTO;
-import com.tuto.trigger.api.dto.RaffleRequestDTO;
-import com.tuto.trigger.api.dto.RaffleResponseDTO;
+import com.tuto.trigger.api.dto.*;
 import com.tuto.types.model.Response;
 
 import java.util.List;
@@ -37,4 +34,11 @@ public interface IRaffleStrategyService {
      * @return 抽奖结果
      */
     Response<RaffleResponseDTO> randomRaffle(RaffleRequestDTO req);
+
+    /**
+     * 查询抽奖策略规则权重
+     * @param req 查询请求参数
+     * @return
+     */
+    Response<List<RaffleStrategyRuleWeightResponseDTO>> queryRaffleStrategyRuleWeight(UserActivityAccountRequestDTO req);
 }

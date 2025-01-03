@@ -59,4 +59,5 @@ public interface IActivityRepository {
 
     Set<Long> queryActivitySkuList();
 
+    ActivityAccountEntity queryActivityAccountEntity(Long activityId, String userId);
 }
