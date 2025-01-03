@@ -12,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * @author tu
@@ -36,14 +37,15 @@ public class RaffleActivityControllerTest {
      * 用于测试:
      */
     @Test
-    public void test_draw() {
+    public void test_draw() throws InterruptedException {
         ActivityDrawRequestDTO request = new ActivityDrawRequestDTO();
         request.setActivityId(100301L);
-        request.setUserId("xiaofuge");
+        request.setUserId("tuhb");
         Response<ActivityDrawResponseDTO> response = raffleActivityService.draw(request);
 
         log.info("请求参数：{}", JSON.toJSONString(request));
         log.info("测试结果：{}", JSON.toJSONString(response));
+        new CountDownLatch(1).await();
     }
 
     /**
@@ -51,7 +53,7 @@ public class RaffleActivityControllerTest {
      */
     @Test
     public void test_isCalendarSignRebate() {
-        Response<Boolean> isCalendarSignRebate = raffleActivityService.isCalendarSignRebate("xiaofuge");
+        Response<Boolean> isCalendarSignRebate = raffleActivityService.isCalendarSignRebate("tuhb");
         log.info("测试结果：{}", JSON.toJSONString(isCalendarSignRebate));
     }
 
@@ -60,7 +62,7 @@ public class RaffleActivityControllerTest {
      */
     @Test
     public void test_calendarSignRebate() {
-        Response<Boolean> calendarSignRebate = raffleActivityService.calendarSignRebate("xiaofuge");
+        Response<Boolean> calendarSignRebate = raffleActivityService.calendarSignRebate("tuhb");
         log.info("测试结果：{}", JSON.toJSONString(calendarSignRebate));
     }
 }

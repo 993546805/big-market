@@ -23,4 +23,10 @@
                      #{userId},#{activityId},#{strategyId},#{orderId},#{awardId},#{awardTitle},#{awardTime},#{awardState},now(),now()
                  )
     </insert>
+
+    <update id="updateAwardRecordCompletedState">
+        UPDATE user_award_record
+        SET award_state = #{awardState},update_time = now()
+        WHERE user_id = #{userId} and order_id = #{orderId}
+    </update>
 </mapper>

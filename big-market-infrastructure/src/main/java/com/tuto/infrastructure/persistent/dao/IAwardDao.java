@@ -9,4 +9,8 @@ public interface IAwardDao {
     int insert(Award award);
 
     Award queryAward(Integer awardId);
+
+    String queryAwardConfigByAwardId(Integer awardId);
+
+    String queryAwardKeyByAwardId(Integer awardId);
 }

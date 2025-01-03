@@ -32,5 +32,5 @@ public class UserAwardRecordEntity {
     /** 中奖时间 */
     private Date awardTime;
     /** 奖品状态; create-创建 completed-发奖完成 */
-    private AwardStateVO awardStateVO;
+    private AwardStateVO awardState;
 }
