@@ -15,10 +15,13 @@ import com.tuto.infrastructure.persistent.po.Task;
 import com.tuto.infrastructure.persistent.po.UserAwardRecord;
 import com.tuto.infrastructure.persistent.po.UserCreditAccount;
 import com.tuto.infrastructure.persistent.po.UserRaffleOrder;
+import com.tuto.infrastructure.persistent.redis.IRedisService;
+import com.tuto.types.common.Constants;
 import com.tuto.types.enums.ResponseCode;
 import com.tuto.types.exception.AppException;
 import lombok.extern.slf4j.Slf4j;
 import org.checkerframework.checker.units.qual.A;
+import org.redisson.api.RLock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
@@ -29,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 奖品仓储层
@@ -59,6 +63,8 @@ public class AwardRepository implements IAwardRepository {
     private IAwardDao awardDao;
     @Resource
     private IUserCreditAccountDao userCreditAccountDao;
+    @Resource
+    private IRedisService redisService;
 
 
     @Override
@@ -153,7 +159,9 @@ public class AwardRepository implements IAwardRepository {
         userCreditAccountReq.setAvailableAmount(userCreditAwardEntity.getCreditAmount());
         userCreditAccountReq.setAccountStatus(AccountStatusVO.open.getCode());
 
+        RLock lock = redisService.getLock(Constants.RedisKey.ACTIVITY_ACCOUNT_LOCK + userId);
         try {
+            lock.lock(3, TimeUnit.SECONDS);
             dbRouter.doRouter(userId);
             transactionTemplate.execute(status -> {
                 try {
@@ -179,6 +187,7 @@ public class AwardRepository implements IAwardRepository {
             });
         }finally {
             dbRouter.clear();
+            lock.unlock();
         }
     }
 
