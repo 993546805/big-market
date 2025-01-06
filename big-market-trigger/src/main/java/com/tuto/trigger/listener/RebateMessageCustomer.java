@@ -11,6 +11,10 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.tuto.domain.activity.model.entity.SkuRechargeEntity;
 import com.tuto.domain.activity.service.IRaffleActivityAccountQuotaService;
+import com.tuto.domain.credit.model.entity.TradeEntity;
+import com.tuto.domain.credit.model.valobj.TradeNameVO;
+import com.tuto.domain.credit.model.valobj.TradeTypeVO;
+import com.tuto.domain.credit.service.ICreditAdjustService;
 import com.tuto.domain.rebate.event.SendRebateMessageEvent;
 import com.tuto.domain.rebate.model.valobj.RebateTypeVO;
 import com.tuto.types.event.BaseEvent;
@@ -22,6 +26,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 
 @Component
 public class RebateMessageCustomer {
@@ -30,6 +35,8 @@ public class RebateMessageCustomer {
     private String topic;
     @Resource
     private IRaffleActivityAccountQuotaService raffleActivityAccountQuotaService;
+    @Resource
+    private ICreditAdjustService creditIncreaseService;
 
     @RabbitListener(queuesToDeclare = @Queue(value = "${spring.rabbitmq.topic.send_rebate}"))
     public void listener(String message) {
@@ -37,18 +44,27 @@ public class RebateMessageCustomer {
             log.info("监听用户行为返利信息 topic: {} message: {}", topic, message);
             // 1. 转换消息
             BaseEvent.EventMessage<SendRebateMessageEvent.RebateMessage> eventMessage = JSON.parseObject(message, new TypeReference<BaseEvent.EventMessage<SendRebateMessageEvent.RebateMessage>>() {}.getType());
-
             SendRebateMessageEvent.RebateMessage rebateMessage = eventMessage.getData();
-            if (!RebateTypeVO.SKU.getCode().equals(rebateMessage.getRebateType())) {
-                log.info("监听用户行为返利消息 - 非 sku 奖励暂不作处理 topic: {} message: {}", topic, message);
-                return;
-            }
+
             // 2. 入账奖励
-            SkuRechargeEntity skuRechargeEntity = new SkuRechargeEntity();
-            skuRechargeEntity.setUserId(rebateMessage.getUserId());
-            skuRechargeEntity.setSku(Long.parseLong(rebateMessage.getRebateConfig()));
-            skuRechargeEntity.setOutBusinessNo(rebateMessage.getBizId());
-            raffleActivityAccountQuotaService.createOrder(skuRechargeEntity);
+            switch (rebateMessage.getRebateType()) {
+                case "sku":
+                    SkuRechargeEntity skuRechargeEntity = new SkuRechargeEntity();
+                    skuRechargeEntity.setUserId(rebateMessage.getUserId());
+                    skuRechargeEntity.setSku(Long.valueOf(rebateMessage.getRebateConfig()));
+                    skuRechargeEntity.setOutBusinessNo(rebateMessage.getBizId());
+                    raffleActivityAccountQuotaService.createOrder(skuRechargeEntity);
+                    break;
+                case "integral":
+                    TradeEntity tradeEntity = new TradeEntity();
+                    tradeEntity.setUserId(rebateMessage.getUserId());
+                    tradeEntity.setTradeName(TradeNameVO.REBATE);
+                    tradeEntity.setTradeType(TradeTypeVO.FORWARD);
+                    tradeEntity.setAmount(new BigDecimal(rebateMessage.getRebateConfig()));
+                    tradeEntity.setOutBusinessNo(rebateMessage.getBizId());
+                    creditIncreaseService.createOrder(tradeEntity);
+                    break;
+            }
         } catch (Exception e) {
             log.error("监听用户行为返利消息, 消费失败 topic: {} message: {} ", topic, message, e);
             throw e;

@@ -24,4 +24,10 @@
         INSERT INTO user_credit_account(user_id, total_amount, available_amount, account_status, create_time, update_time)
         VALUES (#{userId}, #{totalAmount}, #{availableAmount}, #{accountStatus}, now(), now())
     </insert>
+
+    <select id="queryUserCreditAccount" resultMap="dataMap">
+        SELECT id, user_id, total_amount, available_amount, account_status, create_time, update_time
+        FROM user_credit_account
+        WHERE user_id = #{userId}
+    </select>
 </mapper>

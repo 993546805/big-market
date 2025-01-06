@@ -61,9 +61,10 @@ public class RaffleActivityControllerTest {
      * 用于测试: 签到
      */
     @Test
-    public void test_calendarSignRebate() {
+    public void test_calendarSignRebate() throws InterruptedException {
         Response<Boolean> calendarSignRebate = raffleActivityService.calendarSignRebate("tuhb");
         log.info("测试结果：{}", JSON.toJSONString(calendarSignRebate));
+        new CountDownLatch(1).await();
     }
 }
 
