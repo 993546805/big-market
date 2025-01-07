@@ -13,14 +13,14 @@ import com.tuto.domain.strategy.service.IRaffleStock;
 import com.tuto.domain.strategy.service.armory.IStrategyDispatch;
 import com.tuto.domain.strategy.service.rule.chain.ILogicChain;
 import com.tuto.domain.strategy.service.rule.chain.factory.DefaultChainFactory;
-import com.tuto.domain.strategy.service.rule.filter.factory.DefaultLogicFactory;
 import com.tuto.domain.strategy.service.rule.tree.factory.DefaultTreeFactory;
 import com.tuto.domain.strategy.service.rule.tree.factory.engine.IDecisionTreeEngine;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author tu
@@ -30,11 +30,8 @@ import java.util.*;
 @Service
 public class DefaultRaffleStrategy extends AbstractRaffleStrategy implements IRaffleStock, IRaffleAward, IRaffleRule {
 
-    @Resource
-    private DefaultLogicFactory logicFactory;
-
     public DefaultRaffleStrategy(IStrategyRepository repository, IStrategyDispatch strategyDispatch, DefaultChainFactory defaultChainFactory, DefaultTreeFactory defaultTreeFactory) {
-        super(repository, strategyDispatch, defaultChainFactory,defaultTreeFactory);
+        super(repository, strategyDispatch, defaultChainFactory, defaultTreeFactory);
     }
 
     @Override

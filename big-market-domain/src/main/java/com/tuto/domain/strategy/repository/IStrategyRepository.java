@@ -78,4 +78,6 @@ public interface IStrategyRepository {
     Integer queryTodayUserRaffleCount(String userId, Long strategyId);
 
     List<RuleWeightVO> queryAwardRuleWeight(Long strategyId);
+
+    Integer queryActivityAccountTotalUseCount(String userId, Long strategyId);
 }

@@ -58,6 +58,8 @@ public class StrategyRepository implements IStrategyRepository {
     private IRaffleActivityAccountDayDao raffleActivityAccountDayDao;
     @Autowired
     private IRaffleActivityDao iRaffleActivityDao;
+    @Autowired
+    private IRaffleActivityAccountDao iRaffleActivityAccountDao;
 
     @Override
     public List<StrategyAwardEntity> queryStrategyAwardList(Long strategyId) {
@@ -431,6 +433,17 @@ public class StrategyRepository implements IStrategyRepository {
         // 设置缓存 - 实际场景中,这类数据,可以在活动下架的时候同意清空缓存
         redisService.setValue(cacheKey, ruleWeightVOS);
         return ruleWeightVOS;
+    }
+
+    @Override
+    public Integer queryActivityAccountTotalUseCount(String userId, Long strategyId) {
+        Long activityId = activityDao.queryActivityIdByStrategyId(strategyId);
+        RaffleActivityAccount raffleActivityAccount = iRaffleActivityAccountDao.queryActivityAccountByUserId(RaffleActivityAccount.builder()
+                .userId(userId)
+                .activityId(activityId)
+                .build());
+        // 返回计算使用量
+        return raffleActivityAccount.getTotalCount() - raffleActivityAccount.getTotalCountSurplus();
     }
 
     @Override

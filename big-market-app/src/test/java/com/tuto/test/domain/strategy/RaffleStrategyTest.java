@@ -6,7 +6,6 @@ import com.tuto.domain.strategy.model.entity.RaffleFactorEntity;
 import com.tuto.domain.strategy.service.IRaffleStrategy;
 import com.tuto.domain.strategy.service.armory.IStrategyArmory;
 import com.tuto.domain.strategy.service.rule.chain.impl.WeightLogicChain;
-import com.tuto.domain.strategy.service.rule.filter.impl.RuleLockLogicFilter;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,7 +32,6 @@ public class RaffleStrategyTest {
     @Resource
     private IStrategyArmory strategyArmory;
     @Resource
-    private RuleLockLogicFilter ruleLockLogicFilter;
 
     @Before
     public void setUp() {
