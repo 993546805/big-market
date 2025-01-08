@@ -1,5 +1,6 @@
 package com.tuto.domain.activity.service;
 
+import com.tuto.domain.activity.model.entity.ActivitySkuEntity;
 import com.tuto.domain.activity.model.valobj.ActivitySkuStockKeyVO;
 
 import java.util.Set;
@@ -30,5 +31,6 @@ public interface IRaffleActivitySkuStockService {
     void updateActivitySkuStock(Long sku);
 
     Set<Long> getSkuSet();
+
 
 }

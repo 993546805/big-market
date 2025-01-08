@@ -17,7 +17,7 @@
         SET total_amount = total_amount + #{totalAmount},
             available_amount = available_amount + #{availableAmount},
             update_time = now()
-        WHERE user_id = #{userId}
+        WHERE user_id = #{userId} and available_amount + #{availableAmount} > 0
     </update>
 
     <insert id="insert">

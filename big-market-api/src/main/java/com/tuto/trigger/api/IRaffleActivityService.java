@@ -1,9 +1,6 @@
 package com.tuto.trigger.api;
 
-import com.tuto.trigger.api.dto.ActivityDrawRequestDTO;
-import com.tuto.trigger.api.dto.ActivityDrawResponseDTO;
-import com.tuto.trigger.api.dto.UserActivityAccountRequestDTO;
-import com.tuto.trigger.api.dto.UserActivityAccountResponseDTO;
+import com.tuto.trigger.api.dto.*;
 import com.tuto.types.model.Response;
 
 /**
@@ -50,4 +47,5 @@ public interface IRaffleActivityService {
      * @return 用户活动账户响应对象
      */
     Response<UserActivityAccountResponseDTO> queryActivityAccount(UserActivityAccountRequestDTO request);
+
 }

@@ -16,6 +16,8 @@ import com.tuto.infrastructure.persistent.po.UserCreditAccount;
 import com.tuto.infrastructure.persistent.po.UserCreditOrder;
 import com.tuto.infrastructure.persistent.redis.IRedisService;
 import com.tuto.types.common.Constants;
+import com.tuto.types.enums.ResponseCode;
+import com.tuto.types.exception.AppException;
 import org.redisson.api.RLock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +26,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -95,9 +98,21 @@ public class CreditRepository implements ICreditRepository {
                     // 1. 保存账户积分
                     UserCreditAccount userCreditAccount = userCreditAccountDao.queryUserCreditAccount(userCreditAccountReq);
                     if (null == userCreditAccount) {
+                        //  1.1 用户无积分账户且扣减的情况下,则不可以扣减积分
+                        if (userCreditAccountReq.getAvailableAmount().compareTo(BigDecimal.ZERO) < 0){
+                            log.warn("调整账户积分额度异常, 用户不存在积分账户 userId: {} orderId: {}", userId, creditOrderEntity.getOrderId());
+                            status.setRollbackOnly();
+                            throw new AppException(ResponseCode.CREDIT_ACCOUNT_QUOTA_ERROR.getCode(), ResponseCode.CREDIT_ACCOUNT_QUOTA_ERROR.getInfo());
+                        }
                         userCreditAccountDao.insert(userCreditAccountReq);
                     } else {
-                        userCreditAccountDao.updateAddAmount(userCreditAccountReq);
+                        int updateCount = userCreditAccountDao.updateAddAmount(userCreditAccountReq);
+                        // 1.2 修改 update sql `WHERE user_id = #{userId} and available_amount + #{availableAmount} > 0` 若更改失败表明积分不足
+                        if (0 == updateCount) {
+                            log.warn("调整账户积分额度异常, 用户可用积分不足 userId: {} orderId: {}", userId, creditOrderEntity.getOrderId());
+                            status.setRollbackOnly();
+                            throw new AppException(ResponseCode.CREDIT_ACCOUNT_QUOTA_ERROR.getCode(), ResponseCode.CREDIT_ACCOUNT_QUOTA_ERROR.getInfo());
+                        }
                     }
                     // 2. 保存账户订单
                     userCreditOrderDao.insert(userCreditOrderReq);
@@ -108,7 +123,6 @@ public class CreditRepository implements ICreditRepository {
                     log.error("调整账户积分额度异常, 唯一索引冲突 userId: {} orderId: {}", userId, creditOrderEntity.getOrderId(), e);
                 }
                 return 1;
-
             });
         } finally {
             lock.unlock();

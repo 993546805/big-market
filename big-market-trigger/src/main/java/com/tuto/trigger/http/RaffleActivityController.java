@@ -2,11 +2,12 @@ package com.tuto.trigger.http;
 
 import com.alibaba.fastjson.JSON;
 import com.tuto.domain.activity.model.entity.ActivityAccountEntity;
+import com.tuto.domain.activity.model.entity.SkuRechargeEntity;
 import com.tuto.domain.activity.model.entity.UserRaffleOrderEntity;
+import com.tuto.domain.activity.model.valobj.OrderTradeTypeVO;
 import com.tuto.domain.activity.service.IRaffleActivityAccountQuotaService;
 import com.tuto.domain.activity.service.IRaffleActivityPartakeService;
 import com.tuto.domain.activity.service.armory.IActivityArmory;
-import com.tuto.domain.activity.service.quota.RaffleActivityAccountQuotaService;
 import com.tuto.domain.award.model.entity.UserAwardRecordEntity;
 import com.tuto.domain.award.model.valobj.AwardStateVO;
 import com.tuto.domain.award.service.IAwardService;
@@ -19,14 +20,12 @@ import com.tuto.domain.strategy.model.entity.RaffleFactorEntity;
 import com.tuto.domain.strategy.service.IRaffleStrategy;
 import com.tuto.domain.strategy.service.armory.IStrategyArmory;
 import com.tuto.trigger.api.IRaffleActivityService;
-import com.tuto.trigger.api.dto.ActivityDrawRequestDTO;
-import com.tuto.trigger.api.dto.ActivityDrawResponseDTO;
-import com.tuto.trigger.api.dto.UserActivityAccountRequestDTO;
-import com.tuto.trigger.api.dto.UserActivityAccountResponseDTO;
+import com.tuto.trigger.api.dto.*;
 import com.tuto.types.enums.ResponseCode;
 import com.tuto.types.exception.AppException;
 import com.tuto.types.model.Response;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -164,10 +163,11 @@ public class RaffleActivityController implements IRaffleActivityService {
 
     /**
      * 查询用户是否完成日历签到返利
+     *
      * @param userId 用户ID
      * @return 是否完成日历签到返利
      */
-    @RequestMapping(value = "is_calendar_sign_rebate",method = RequestMethod.POST)
+    @RequestMapping(value = "is_calendar_sign_rebate", method = RequestMethod.POST)
     @Override
     public Response<Boolean> isCalendarSignRebate(@RequestParam String userId) {
         try {
@@ -185,6 +185,7 @@ public class RaffleActivityController implements IRaffleActivityService {
 
     /**
      * 查询用户活动账户额度
+     *
      * @param request 用户活动账户请求对象
      * @return 用户活动账户
      */
