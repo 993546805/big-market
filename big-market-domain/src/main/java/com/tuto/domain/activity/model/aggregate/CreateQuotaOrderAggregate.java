@@ -1,6 +1,7 @@
 package com.tuto.domain.activity.model.aggregate;
 
 import com.tuto.domain.activity.model.entity.ActivityOrderEntity;
+import com.tuto.domain.activity.model.valobj.OrderStateVO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,11 +15,15 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateOrderAggregate {
+public class CreateQuotaOrderAggregate {
     private String userId;
     private Long activityId;
     private Integer totalCount;
     private Integer dayCount;
     private Integer monthCount;
     private ActivityOrderEntity activityOrderEntity;
+
+    public void setOrderState(OrderStateVO orderState) {
+        this.activityOrderEntity.setState(orderState);
+    }
 }

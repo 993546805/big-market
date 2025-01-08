@@ -214,4 +214,6 @@ public class RaffleActivityController implements IRaffleActivityService {
             return Response.<UserActivityAccountResponseDTO>builder().code(ResponseCode.UN_ERROR.getCode()).info(ResponseCode.UN_ERROR.getInfo()).build();
         }
     }
+
+
 }

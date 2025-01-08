@@ -2,14 +2,17 @@ package com.tuto.test.domain.activity;
 
 import com.alibaba.fastjson.JSON;
 import com.tuto.domain.activity.model.entity.SkuRechargeEntity;
+import com.tuto.domain.activity.model.valobj.OrderTradeTypeVO;
 import com.tuto.domain.activity.service.IRaffleActivityAccountQuotaService;
 import com.tuto.domain.activity.service.armory.IActivityArmory;
+import com.tuto.domain.activity.service.quota.RaffleActivityAccountQuotaService;
 import com.tuto.types.exception.AppException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -29,6 +32,8 @@ public class RaffleActivityAccountQuotaTest {
     private IRaffleActivityAccountQuotaService raffleOrder;
     @Resource
     private IActivityArmory activityArmory;
+    @Autowired
+    private IRaffleActivityAccountQuotaService raffleActivityAccountQuotaService;
 
     /**
      * 用于测试: 创建抽奖单
@@ -81,5 +86,21 @@ public class RaffleActivityAccountQuotaTest {
         }
 
         new CountDownLatch(1).await();
+    }
+
+
+    /**
+     * 用于测试: 积分兑换 sku 商品下单
+     */
+    @Test
+    public void test_credit_pay_trade() {
+        SkuRechargeEntity skuRechargeEntity = new SkuRechargeEntity();
+        skuRechargeEntity.setUserId("tuhb");
+        skuRechargeEntity.setSku(9011L);
+
+        skuRechargeEntity.setOutBusinessNo("7823974982374");
+        skuRechargeEntity.setOrderTradeType(OrderTradeTypeVO.credit_pay_trade);
+        String order = raffleActivityAccountQuotaService.createOrder(skuRechargeEntity);
+        log.info("测试结果：{}",order);
     }
 }

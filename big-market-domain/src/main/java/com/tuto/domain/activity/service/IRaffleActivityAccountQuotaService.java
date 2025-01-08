@@ -2,6 +2,7 @@ package com.tuto.domain.activity.service;
 
 
 import com.tuto.domain.activity.model.entity.ActivityAccountEntity;
+import com.tuto.domain.activity.model.entity.DeliveryOrderEntity;
 import com.tuto.domain.activity.model.entity.SkuRechargeEntity;
 
 /**
@@ -30,4 +31,10 @@ public interface IRaffleActivityAccountQuotaService {
 
 
     ActivityAccountEntity queryActivityAccountEntity(Long activityId, String userId);
+
+    /**
+     * 订单出货 - 积分充值
+     * @param deliveryOrderEntity 出货单实体对象
+     */
+    void updateOrder(DeliveryOrderEntity deliveryOrderEntity);
 }

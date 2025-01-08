@@ -1,7 +1,7 @@
 package com.tuto.domain.activity.repository;
 
-import com.tuto.domain.activity.model.aggregate.CreateOrderAggregate;
 import com.tuto.domain.activity.model.aggregate.CreatePartakeOrderAggregate;
+import com.tuto.domain.activity.model.aggregate.CreateQuotaOrderAggregate;
 import com.tuto.domain.activity.model.entity.*;
 import com.tuto.domain.activity.model.valobj.ActivitySkuStockKeyVO;
 
@@ -17,7 +17,6 @@ public interface IActivityRepository {
 
     ActivityCountEntity queryRaffleActivityCountByActivityCountId(Long activityCountId);
 
-    void doSaveOrder(CreateOrderAggregate createOrderAggregate);
 
     boolean subtractionActivitySkuStock(Long sku, String cacheKey, Date endDateTime);
 
@@ -35,7 +34,8 @@ public interface IActivityRepository {
 
     /**
      * 查询未使用的抽奖订单
-     * @param userId 用户ID
+     *
+     * @param userId     用户ID
      * @param activityId 活动ID
      * @return
      */
@@ -43,6 +43,7 @@ public interface IActivityRepository {
 
     /**
      * 保存创建抽奖订单聚合对象
+     *
      * @param createPartakeOrderAggregate
      */
     void saveCreatePartakeOrderAggregate(CreatePartakeOrderAggregate createPartakeOrderAggregate);
@@ -60,4 +61,10 @@ public interface IActivityRepository {
     Set<Long> queryActivitySkuList();
 
     ActivityAccountEntity queryActivityAccountEntity(Long activityId, String userId);
+
+    void doSaveNoPayOrder(CreateQuotaOrderAggregate createQuotaOrderAggregate);
+
+    void doSaveCreditPayOrder(CreateQuotaOrderAggregate createQuotaOrderAggregate);
+
+    void updateOrder(DeliveryOrderEntity deliveryOrderEntity);
 }

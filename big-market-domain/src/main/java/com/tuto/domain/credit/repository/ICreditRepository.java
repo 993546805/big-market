@@ -12,4 +12,5 @@ public interface ICreditRepository {
      * @param tradeAggregate 积分交易订单
      */
     void saveUserCreditTradeOrder(TradeAggregate tradeAggregate);
+
 }
