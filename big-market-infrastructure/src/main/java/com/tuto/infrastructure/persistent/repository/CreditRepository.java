@@ -1,5 +1,6 @@
 package com.tuto.infrastructure.persistent.repository;
 
+import cn.bugstack.middleware.db.router.DBContextHolder;
 import cn.bugstack.middleware.db.router.strategy.IDBRouterStrategy;
 import com.alibaba.fastjson.JSON;
 import com.tuto.domain.credit.model.aggregate.TradeAggregate;
@@ -95,8 +96,11 @@ public class CreditRepository implements ICreditRepository {
             // 编程式事务
             transactionTemplate.execute(status -> {
                 try {
+                    log.info("dbKey1: {}",DBContextHolder.getTBKey());
                     // 1. 保存账户积分
                     UserCreditAccount userCreditAccount = userCreditAccountDao.queryUserCreditAccount(userCreditAccountReq);
+                    // 查询方法会被切面拦截,重新计算 tbIdx 和 dbIdx,并且在查询完毕后会清除,所以需要重新计算
+                    dbRouter.doRouter(userId);
                     if (null == userCreditAccount) {
                         //  1.1 用户无积分账户且扣减的情况下,则不可以扣减积分
                         if (userCreditAccountReq.getAvailableAmount().compareTo(BigDecimal.ZERO) < 0){
@@ -107,6 +111,7 @@ public class CreditRepository implements ICreditRepository {
                         userCreditAccountDao.insert(userCreditAccountReq);
                     } else {
                         int updateCount = userCreditAccountDao.updateAddAmount(userCreditAccountReq);
+                        log.info("dbKey2: {}",DBContextHolder.getTBKey());
                         // 1.2 修改 update sql `WHERE user_id = #{userId} and available_amount + #{availableAmount} > 0` 若更改失败表明积分不足
                         if (0 == updateCount) {
                             log.warn("调整账户积分额度异常, 用户可用积分不足 userId: {} orderId: {}", userId, creditOrderEntity.getOrderId());
@@ -114,10 +119,13 @@ public class CreditRepository implements ICreditRepository {
                             throw new AppException(ResponseCode.CREDIT_ACCOUNT_QUOTA_ERROR.getCode(), ResponseCode.CREDIT_ACCOUNT_QUOTA_ERROR.getInfo());
                         }
                     }
+                    log.info("dbKey2: {}",DBContextHolder.getTBKey());
                     // 2. 保存账户订单
                     userCreditOrderDao.insert(userCreditOrderReq);
+                    log.info("dbKey3: {}",DBContextHolder.getTBKey());
                     // 3. 写入任务
                     taskDao.insert(task);
+                    log.info("dbKey4: {}",DBContextHolder.getTBKey());
                 } catch (DuplicateKeyException e) {
                     status.setRollbackOnly();
                     log.error("调整账户积分额度异常, 唯一索引冲突 userId: {} orderId: {}", userId, creditOrderEntity.getOrderId(), e);
@@ -125,8 +133,8 @@ public class CreditRepository implements ICreditRepository {
                 return 1;
             });
         } finally {
-            lock.unlock();
             dbRouter.clear();
+            lock.unlock();
         }
 
         try {
@@ -140,6 +148,20 @@ public class CreditRepository implements ICreditRepository {
             log.error("调整账号积分记录,发送 MQ消息失败 userId: {} topic: {}", userId, task.getTopic());
             taskDao.updateTaskSendMessageFail(task);
         }
+    }
+
+    @Override
+    public CreditAccountEntity queryUserCreditAccount(String userId) {
+        UserCreditAccount userCreditAccountReq = new UserCreditAccount();
+        userCreditAccountReq.setUserId(userId);
+        UserCreditAccount userCreditAccountRes = userCreditAccountDao.queryUserCreditAccount(userCreditAccountReq);
+        if (null == userCreditAccountRes) {
+            return null;
+        }
+        return CreditAccountEntity.builder()
+                .userId(userCreditAccountRes.getUserId())
+                .adjustAmount(userCreditAccountRes.getTotalAmount())
+                .build();
     }
 
 

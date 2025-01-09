@@ -1,5 +1,6 @@
 package com.tuto.domain.credit.service;
 
+import com.tuto.domain.credit.model.entity.CreditAccountEntity;
 import com.tuto.domain.credit.model.entity.TradeEntity;
 
 /**
@@ -13,4 +14,6 @@ public interface ICreditAdjustService {
      * @return 订单号
      */
     String createOrder(TradeEntity tradeEntity);
+
+    CreditAccountEntity queryUserCreditAccount(String userId);
 }

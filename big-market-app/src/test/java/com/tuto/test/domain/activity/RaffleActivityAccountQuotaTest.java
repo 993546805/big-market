@@ -2,6 +2,7 @@ package com.tuto.test.domain.activity;
 
 import com.alibaba.fastjson.JSON;
 import com.tuto.domain.activity.model.entity.SkuRechargeEntity;
+import com.tuto.domain.activity.model.entity.UnpaidActivityOrderEntity;
 import com.tuto.domain.activity.model.valobj.OrderTradeTypeVO;
 import com.tuto.domain.activity.service.IRaffleActivityAccountQuotaService;
 import com.tuto.domain.activity.service.armory.IActivityArmory;
@@ -45,12 +46,12 @@ public class RaffleActivityAccountQuotaTest {
                 .userId("tuhb")
                 .outBusinessNo("sdlkfjo0011")
                 .build();
-        String orderId = raffleOrder.createOrder(activityShopCartEntity);
+        UnpaidActivityOrderEntity orderId = raffleOrder.createOrder(activityShopCartEntity);
         log.info("测试结果：{}", JSON.toJSONString(orderId));
     }
 
 
-    @Before
+//    @Before
     public void setUp(){
         log.info("装配活动: {}",activityArmory.assembleActivitySku(9011L));
     }
@@ -78,7 +79,7 @@ public class RaffleActivityAccountQuotaTest {
                 skuRechargeEntity.setSku(9011L);
                 skuRechargeEntity.setUserId("tuhb");
                 skuRechargeEntity.setOutBusinessNo(RandomStringUtils.randomNumeric(12));
-                String orderId = raffleOrder.createOrder(skuRechargeEntity);
+                UnpaidActivityOrderEntity orderId = raffleOrder.createOrder(skuRechargeEntity);
                 log.info("测试结果：{}",orderId);
             } catch (AppException e) {
                 log.warn(e.getInfo());
@@ -100,7 +101,7 @@ public class RaffleActivityAccountQuotaTest {
 
         skuRechargeEntity.setOutBusinessNo("7823974982374");
         skuRechargeEntity.setOrderTradeType(OrderTradeTypeVO.credit_pay_trade);
-        String order = raffleActivityAccountQuotaService.createOrder(skuRechargeEntity);
+        UnpaidActivityOrderEntity order = raffleActivityAccountQuotaService.createOrder(skuRechargeEntity);
         log.info("测试结果：{}",order);
     }
 }

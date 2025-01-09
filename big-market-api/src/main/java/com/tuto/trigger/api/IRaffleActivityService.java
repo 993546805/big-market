@@ -3,6 +3,9 @@ package com.tuto.trigger.api;
 import com.tuto.trigger.api.dto.*;
 import com.tuto.types.model.Response;
 
+import java.math.BigDecimal;
+import java.util.List;
+
 /**
  * 抽奖活动接口
  */
@@ -48,4 +51,24 @@ public interface IRaffleActivityService {
      */
     Response<UserActivityAccountResponseDTO> queryActivityAccount(UserActivityAccountRequestDTO request);
 
+    /**
+     * 积分兑换商品
+     * @param request 积分兑换商品请求对象
+     * @return 是否成功
+     */
+    Response<Boolean> creditPayExchangeSku(CreditPayExchangeSkuRequestDTO request);
+
+    /**
+     * 活动商品查询
+     * @param activityId 活动 ID
+     * @return 活动商品列表集合
+     */
+    Response<List<SkuProductResponseDTO>> querySkuProductListByActivityId(Long activityId);
+
+    /**
+     * 查询用户积分
+     * @param userId 用户 ID
+     * @return 用户积分
+     */
+    Response<BigDecimal> queryUserCredit(String userId);
 }

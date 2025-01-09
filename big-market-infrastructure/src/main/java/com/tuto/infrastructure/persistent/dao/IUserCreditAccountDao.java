@@ -1,5 +1,6 @@
 package com.tuto.infrastructure.persistent.dao;
 
+import cn.bugstack.middleware.db.router.annotation.DBRouter;
 import com.tuto.infrastructure.persistent.po.UserCreditAccount;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -13,5 +14,6 @@ public interface IUserCreditAccountDao {
 
     void insert(UserCreditAccount userCreditAccountReq);
 
+    @DBRouter
     UserCreditAccount queryUserCreditAccount(UserCreditAccount userCreditAccountReq);
 }
