@@ -13,6 +13,8 @@ public enum ResponseCode {
     UN_ERROR("0001", "未知失败"),
     ILLEGAL_PARAMETER("0002", "非法参数"),
     INDEX_DUP("0003", "唯一索引冲突"),
+    DEGRADE_SWITCH("0004", "活动已降级"),
+
     STRATEGY_RULE_WEIGHT_IS_NULL("ERR_BIZ_001", "策略规则权重为空"),
     UN_ASSEMBLED_STRATEGY_ARMORY("ERR_BIZ_002", "抽奖策略配置未装配，请通过IStrategyArmory完成装配"),
     ACTIVITY_STATE_ERROR("ERR_BIZ_003","活动未开启(非open状态)" ),
@@ -23,6 +25,7 @@ public enum ResponseCode {
     ACCOUNT_DAY_QUOTA_ERROR("ERR_BIZ_008","账户日额度不足" ),
     ACTIVITY_ORDER_ERROR("ERR_BIZ_009", "用户抽奖单已使用过，不可重复抽奖"),
     CREDIT_ACCOUNT_QUOTA_ERROR("ERR_BIZ_010", "用户积分不足"),
+
     ;
 
     private String code;
