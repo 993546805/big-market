@@ -1,6 +1,8 @@
 package com.tuto.trigger.http;
 
 import com.alibaba.fastjson.JSON;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import com.tuto.domain.activity.model.entity.*;
 import com.tuto.domain.activity.model.valobj.OrderTradeTypeVO;
 import com.tuto.domain.activity.service.IRaffleActivityAccountQuotaService;
@@ -26,6 +28,7 @@ import com.tuto.domain.strategy.service.armory.IStrategyArmory;
 import com.tuto.trigger.api.IRaffleActivityService;
 import com.tuto.trigger.api.dto.*;
 import com.tuto.types.annotations.DCCValue;
+import com.tuto.types.annotations.RateLimiterAccessInterceptor;
 import com.tuto.types.enums.ResponseCode;
 import com.tuto.types.exception.AppException;
 import com.tuto.types.model.Response;
@@ -125,12 +128,17 @@ public class RaffleActivityController implements IRaffleActivityService {
      * "activityId": 100301
      * }'
      */
+    @RateLimiterAccessInterceptor(key = "userId", fallbackMethod = "drawRateLimiterError", permitsPerSecond = 1.0d, blacklistCount = 1)
+    @HystrixCommand(commandProperties = {
+            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "150")
+    }, fallbackMethod = "drawHystrixError")
     @RequestMapping(value = "draw", method = RequestMethod.POST)
     @Override
     public Response<ActivityDrawResponseDTO> draw(@RequestBody ActivityDrawRequestDTO request) {
         try {
-            log.info("活动抽奖 userId: {} activityId: {}", request.getUserId(), request.getActivityId());
-            if (!"open".equals(degradeSwitch)) {
+            log.info("活动抽奖开始 userId: {} activityId: {}", request.getUserId(), request.getActivityId());
+            // 0. 降级开关[open 开启 close 关闭]
+            if (StringUtils.isNotBlank(degradeSwitch) && "open".equals(degradeSwitch)) {
                 return Response.<ActivityDrawResponseDTO>builder()
                         .code(ResponseCode.DEGRADE_SWITCH.getCode())
                         .info(ResponseCode.DEGRADE_SWITCH.getInfo())
@@ -157,6 +165,22 @@ public class RaffleActivityController implements IRaffleActivityService {
             log.error("活动抽奖失败 userId:{} activityId:{}", request.getUserId(), request.getActivityId(), e);
             return Response.<ActivityDrawResponseDTO>builder().code(ResponseCode.UN_ERROR.getCode()).info(ResponseCode.UN_ERROR.getInfo()).build();
         }
+    }
+
+    public Response<ActivityDrawResponseDTO> drawRateLimiterError(@RequestBody ActivityDrawRequestDTO req) {
+        log.info("活动抽奖限流 userId: {} activityId: {}", req.getUserId(), req.getActivityId());
+        return Response.<ActivityDrawResponseDTO>builder()
+                .code(ResponseCode.HYSTRIX.getCode())
+                .info(ResponseCode.HYSTRIX.getInfo())
+                .build();
+    }
+
+    public Response<ActivityDrawResponseDTO> drawHystrixError(@RequestBody ActivityDrawRequestDTO req) {
+        log.info("活动抽奖熔断 userId: {} activityId: {}", req.getUserId(), req.getActivityId());
+        return Response.<ActivityDrawResponseDTO>builder()
+                .code(ResponseCode.HYSTRIX.getCode())
+                .info(ResponseCode.HYSTRIX.getInfo())
+                .build();
     }
 
     @RequestMapping(value = "calendar_sign_rebate", method = RequestMethod.POST)

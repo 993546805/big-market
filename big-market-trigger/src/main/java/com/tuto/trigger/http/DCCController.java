@@ -41,7 +41,7 @@ public class DCCController implements IDCCService {
                 log.info("DCC 节点监听 base node {} not absent create new done!", keyPath);
             }
             Stat stat = client.setData().forPath(keyPath, value.getBytes(StandardCharsets.UTF_8));
-            log.info("DCC 动态配置值变更完成 key: {} value: {} time: {}", key, value, stat.getCtime());
+            log.info("DCC 动态配置值变更完成 keyPath: {} key: {} value: {} time: {}",keyPath, key, value, stat.getCtime());
             return Response.<Boolean>builder()
                     .code(ResponseCode.SUCCESS.getCode())
                     .info(ResponseCode.SUCCESS.getInfo())
